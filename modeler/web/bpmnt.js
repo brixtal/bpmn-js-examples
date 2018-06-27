@@ -1,5 +1,5 @@
 
-function createTask(incoming, outcoming) {
+function createTask(incoming, outgoing) {
 
 	var taskId = 'Task_' + Math.random().toString().replace('0.','');
 	var attr = [];
@@ -13,16 +13,16 @@ function createTask(incoming, outcoming) {
 		var incomingTag = tagFactory('incoming', []);
 		var contentTag = textTag(incoming);
 		incomingTag.appendChild(contentTag);
-		taskTag.appendChild(incomingTag)
+		taskTag.appendChild(incomingTag);
 	}
-	if(outcoming.length > 1){
-		var outcomingTag = tagFactory('outcoming', []);
-		var contentTag = textTag(outcoming);
-		outcomingTag.appendChild(contentTag);
-		taskTag.appendChild(outcomingTag)
+	if(outgoing.length > 1){
+		var outgoingTag = tagFactory('outgoing', []);
+		var contentTag = textTag(outgoing);
+		outgoingTag.appendChild(contentTag);
+		taskTag.appendChild(outgoingTag);
 	}
 
-	console.log(taskTag);
+	return taskTag;
 }
 
 function tagFactory(type, attr) {
@@ -34,6 +34,8 @@ function tagFactory(type, attr) {
 	var prop;
 	for (var i = 0; i < attr.length; i++) {
 		prop = attr.pop();
+		console.log(prop.key);
+		console.log(prop.value);
 		tag.setAttribute(prop.key, prop.value);	
 	}
 	
@@ -47,4 +49,31 @@ function textTag(text) {
 	var textTag = xmlDoc.createTextNode(text);
 
 	return textTag;
+}
+
+function createSequenceFlowId() {
+	var sequenceFlowElementId = 'SequenceFlow_' + Math.random().toString().replace('0.','');
+	return sequenceFlowElementId;
+}
+
+function createSequenceFlowTag(id, sourceRef, targetRef) {
+	var attr = [];
+	
+	attr.push({
+    	key:   "sourceRef",
+    	value: sourceRef
+	},{
+    	key:   "targetRef",
+    	value: targetRef
+	},{
+    	key:   "id",
+    	value: id
+	});		
+
+	var tag = tagFactory('sequenceFlow', attr);
+	tag.setAttribute('sourceRef', sourceRef);
+
+	console.log(tag);
+
+	return tag;
 }

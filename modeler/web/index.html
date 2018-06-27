@@ -9,89 +9,9 @@
   
   
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- <script src="jquery.contextMenu.js"></script>
- <script src="bpmnt.js"></script>
-<script>
+ <script src="./jquery.contextMenu.js"></script>
+ <script src="./bpmnt.js"></script>
 
-$(function() {
-        $.contextMenu({
-            selector: '.djs-element', 
-            callback: function(key, options) {
-                var m = key + " on " + $(this).attr("data-element-id");
-				var action;
-				window.console && console.log(m) || alert(m); 
-				if(key == "insert-s"){					
-          var bpmnTailored = $('#js-download-diagram').attr('href').split(',');
-
-          var xml = decodeURIComponent(bpmnTailored);
-
-          var parser = new DOMParser();
-
-          var xmlDoc = parser.parseFromString(bpmnTailored[0], "text/xml");
-
-          sessionStorage.setItem('xml', xmlDoc);
-
-          //sessionStorage.setItem('bpmn', bpmnTailored[1]);          
-          //location.reload();
-				}
-				if(key == "insert-c"){
-					/*action = $('div[data-action="append.gateway"]');
-					action.trigger("click");
-					var gateway = $('.selected');
-					
-					action = $('div[data-action="append.append-task"]');
-					alert (gateway.attr("data-element-id"));
-					action.trigger("click");
-					gateway.trigger("focus");
-					gateway.trigger("hover");
-					action = $('div[data-action="append.append-task"]');		*/
-
-
-
-          location.reload();		
-				}
-				if(key == "delete") {
-					action = $('div[data-action="delete"]');
-				}
-				//action.trigger("click");
-				//alert(teste);
-            },
-            items: {
-                "extend": {name: "Extend"},
-                "delete": {name: "Delete"},
-                "replace": {name: "Replace"},
-                "move": {name: "Move"},
-                "paralellize": {name: "Paralellize"},
-                "encapsulate": {name: "Encapsulate"},
-				"split": {name: "Split"},
-				"merge": {name: "Merge"},
-				"rename": {name: "Rename"},
-				"fold1": {
-					"name":"Exception",
-					"items": {
-						"exception-h": {name: "Handler"},
-						"exception-f": {name: "Flow"},
-					}
-				},
-				"fold2": {
-					"name":"Insert",
-					"items": {
-						"insert-s": {name: "Serial"},
-						"insert-c": {name: "Conditional"},
-						"insert-e": {name: "Event-based"}
-					}
-				}		
-            }
-        });
-
-        $('.context-menu-one').on('click', function(e){
-            console.log('clicked', this);
-        })    
-    });
-
-    
-
-</script>
     
 </head>
 <body>
@@ -132,6 +52,102 @@ $(function() {
       </a>
     </li>
   </ul>
+
+  <script>
+
+var parser = new DOMParser();
+
+var bpmnXml = parser.parseFromString(decodeURIComponent(sessionStorage.bpmn), 'text/xml');
+
+
+
+function createSequenceFlow() {
+  var sequenceFlowElement = 'SequenceFlow_' + Math.random().toString().replace('0.','');
+  return sequenceFlowElement;
+}
+
+$(function() {
+        $.contextMenu({
+            selector: '.djs-element', 
+            callback: function(key, options) {
+                var m = key + " on " + $(this).attr("data-element-id");
+        var action, selectedElement;
+        window.console && console.log(m); 
+        if(key == "insert-s"){
+           selectedElement = $(this).attr("data-element-id");
+           var elementXml = bpmnXml.getElementById(selectedElement);
+                
+           
+           var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;
+           console.log(outgoingSequenceFlow);           
+           var newOutgoingSequenceFlow = createSequenceFlowId();
+           elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML = newOutgoingSequenceFlow;
+           var newTask = createTask(newOutgoingSequenceFlow, outgoingSequenceFlow);
+           var newSequenceFlow = createSequenceFlowTag(newOutgoingSequenceFlow, selectedElement, newTask.id);
+           bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newSequenceFlow);
+           bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newTask);
+           console.log(bpmnXml);
+        }
+
+        
+        if(key == "insert-c"){
+          /*action = $('div[data-action="append.gateway"]');
+          action.trigger("click");
+          var gateway = $('.selected');
+          
+          action = $('div[data-action="append.append-task"]');
+          alert (gateway.attr("data-element-id"));
+          action.trigger("click");
+          gateway.trigger("focus");
+          gateway.trigger("hover");
+          action = $('div[data-action="append.append-task"]');    */
+
+
+
+          location.reload();    
+        }
+        if(key == "delete") {
+          action = $('div[data-action="delete"]');
+        }
+        //action.trigger("click");
+        //alert(teste);
+            },
+            items: {
+                "extend": {name: "Extend"},
+                "delete": {name: "Delete"},
+                "replace": {name: "Replace"},
+                "move": {name: "Move"},
+                "paralellize": {name: "Paralellize"},
+                "encapsulate": {name: "Encapsulate"},
+        "split": {name: "Split"},
+        "merge": {name: "Merge"},
+        "rename": {name: "Rename"},
+        "fold1": {
+          "name":"Exception",
+          "items": {
+            "exception-h": {name: "Handler"},
+            "exception-f": {name: "Flow"},
+          }
+        },
+        "fold2": {
+          "name":"Insert",
+          "items": {
+            "insert-s": {name: "Serial"},
+            "insert-c": {name: "Conditional"},
+            "insert-e": {name: "Event-based"}
+          }
+        }   
+            }
+        });
+
+        $('.context-menu-one').on('click', function(e){
+            console.log('clicked', this);
+        })    
+    });
+
+    
+
+</script>
 
   <script src="index.js"></script>
   
