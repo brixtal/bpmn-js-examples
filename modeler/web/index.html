@@ -20,8 +20,19 @@ $(function() {
                 var m = key + " on " + $(this).attr("data-element-id");
 				var action;
 				window.console && console.log(m) || alert(m); 
-				if(key == "insert-s"){
-					action = $('div[data-action="append.append-task"]');
+				if(key == "insert-s"){					
+          var bpmnTailored = $('#js-download-diagram').attr('href').split(',');
+
+          var xml = decodeURIComponent(bpmnTailored);
+
+          var parser = new DOMParser();
+
+          var xmlDoc = parser.parseFromString(bpmnTailored[0], "text/xml");
+
+          sessionStorage.setItem('xml', xmlDoc);
+
+          //sessionStorage.setItem('bpmn', bpmnTailored[1]);          
+          //location.reload();
 				}
 				if(key == "insert-c"){
 					/*action = $('div[data-action="append.gateway"]');
@@ -33,7 +44,10 @@ $(function() {
 					action.trigger("click");
 					gateway.trigger("focus");
 					gateway.trigger("hover");
-					action = $('div[data-action="append.append-task"]');		*/	
+					action = $('div[data-action="append.append-task"]');		*/
+
+
+
           location.reload();		
 				}
 				if(key == "delete") {
