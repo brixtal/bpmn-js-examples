@@ -241,12 +241,12 @@ svg.new-parent {
  */
 
 .djs-palette {
-  position: absolute;
+  /*position: absolute;
   left: 20px;
   top: 20px;
 
   box-sizing: border-box;
-  width: 48px;
+  width: 48px;*/
 }
 
 .djs-palette .separator {
@@ -370,7 +370,7 @@ svg.new-parent {
 }
 
 .djs-context-pad.open {
-  display: block;
+ /* display: block;*/
 }
 
 /**
