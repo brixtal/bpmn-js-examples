@@ -32,10 +32,9 @@ function tagFactory(type, attr) {
 	
 	var tag = xmlDoc.createElement("bpmn2:" + type);
 	var prop;
-	for (var i = 0; i < attr.length; i++) {
+	var size = attr.length;
+	for (var i = 0; i < size; i++) {
 		prop = attr.pop();
-		console.log(prop.key);
-		console.log(prop.value);
 		tag.setAttribute(prop.key, prop.value);	
 	}
 	
@@ -71,7 +70,7 @@ function createSequenceFlowTag(id, sourceRef, targetRef) {
 	});		
 
 	var tag = tagFactory('sequenceFlow', attr);
-	tag.setAttribute('sourceRef', sourceRef);
+	//tag.setAttribute('sourceRef', sourceRef);
 
 	console.log(tag);
 

@@ -75,15 +75,13 @@ $(function() {
         window.console && console.log(m); 
         if(key == "insert-s"){
            selectedElement = $(this).attr("data-element-id");
-           var elementXml = bpmnXml.getElementById(selectedElement);
-                
-           
-           var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;
-           console.log(outgoingSequenceFlow);           
-           var newOutgoingSequenceFlow = createSequenceFlowId();
-           elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML = newOutgoingSequenceFlow;
+           var elementXml = bpmnXml.getElementById(selectedElement);        
+           var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;                
+           var newOutgoingSequenceFlow = createSequenceFlowId();           
+           elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML = newOutgoingSequenceFlow;           
            var newTask = createTask(newOutgoingSequenceFlow, outgoingSequenceFlow);
            var newSequenceFlow = createSequenceFlowTag(newOutgoingSequenceFlow, selectedElement, newTask.id);
+           bpmnXml.getElementById(outgoingSequenceFlow).setAttribute('sourceRef', newTask.id);
            bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newSequenceFlow);
            bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newTask);
            console.log(bpmnXml);
