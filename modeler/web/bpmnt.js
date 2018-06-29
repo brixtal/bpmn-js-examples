@@ -232,4 +232,46 @@ function getXPosElement(elementId, xml) {
 	tag.appendChild(wp2);
 
 	return tag;
- }	
+ }
+
+ function xml2String (xml) {
+
+	var string = new XMLSerializer().serializeToString(xml);
+
+ 	return string;
+ }
+
+ function operationInsertSerial (selectedElement, bpmnXml) {
+
+ 	var elementXml = bpmnXml.getElementById(selectedElement);        
+   var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;                
+   var newOutgoingSequenceFlow = createSequenceFlowId();           
+   elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML = newOutgoingSequenceFlow;           
+   var newTask = createTask(newOutgoingSequenceFlow, outgoingSequenceFlow);
+   var newSequenceFlow = createSequenceFlowTag(newOutgoingSequenceFlow, selectedElement, newTask.id);
+   bpmnXml.getElementById(outgoingSequenceFlow).setAttribute('sourceRef', newTask.id);
+   bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newSequenceFlow);
+   bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newTask);
+
+   var posNewTaskY = getDeeperElement(bpmnXml);
+   var posNewTaskX = getXPosElement(selectedElement, bpmnXml);
+
+   var posSelectectElementX = getSelectedElementPosX(selectedElement, bpmnXml);
+   var posSelectectElementY = getSelectedElementPosY(selectedElement, bpmnXml);
+
+   var newTaskDi = createTaskGraphic(newTask.id, posNewTaskX, posNewTaskY, '80', '100');
+
+   var newSequenceFlowDi = createSQGraphic(newOutgoingSequenceFlow, parseInt(posSelectectElementX)-40, parseInt(posSelectectElementY)+30, parseInt(posNewTaskX)+40, parseInt(posNewTaskY));
+
+   bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].appendChild(newTaskDi);
+   bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].appendChild(newSequenceFlowDi);
+   var temp = bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1];
+   bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1] = bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0];
+   bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0].setAttribute('x', parseInt(posNewTaskX)+100);
+   bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0].setAttribute('y',  parseInt(posNewTaskY)+5);
+
+   var bpmnString = xml2String(bpmnXml);   
+
+   return bpmnString;
+   
+ }
