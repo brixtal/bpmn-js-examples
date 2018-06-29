@@ -17,11 +17,13 @@
 <body>
   <div class="content" id="js-drop-zone">
 
-    <div class="message intro">
+  <!--  <div class="message intro">
       <div class="note">
 		Drop BPMN diagram from your desktop or <a id="js-create-diagram" href>create a new diagram</a> to get started.
       </div>
-    </div>
+    </div> -->
+
+    <center id='loading'>Loading...</center>
 
     <div class="message error">
       <div class="note">
@@ -59,8 +61,6 @@ var parser = new DOMParser();
 
 var bpmnXml = parser.parseFromString(decodeURIComponent(sessionStorage.bpmn), 'text/xml');
 
-
-
 function createSequenceFlow() {
   var sequenceFlowElement = 'SequenceFlow_' + Math.random().toString().replace('0.','');
   return sequenceFlowElement;
@@ -84,7 +84,29 @@ $(function() {
            bpmnXml.getElementById(outgoingSequenceFlow).setAttribute('sourceRef', newTask.id);
            bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newSequenceFlow);
            bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newTask);
-           console.log(bpmnXml);
+
+           var posNewTaskY = getDeeperElement(bpmnXml);
+           var posNewTaskX = getXPosElement(selectedElement, bpmnXml);
+
+           var posSelectectElementX = getSelectedElementPosX(selectedElement, bpmnXml);
+           var posSelectectElementY = getSelectedElementPosY(selectedElement, bpmnXml);
+
+           var newTaskDi = createTaskGraphic(newTask.id, posNewTaskX, posNewTaskY, '80', '100');
+
+           var newSequenceFlowDi = createSQGraphic(newOutgoingSequenceFlow, parseInt(posSelectectElementX)-40, parseInt(posSelectectElementY)+30, parseInt(posNewTaskX)+40, parseInt(posNewTaskY));
+
+           bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].appendChild(newTaskDi);
+           bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].appendChild(newSequenceFlowDi);
+           var temp = bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1];
+           bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1] = bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0];
+           bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0].setAttribute('x', parseInt(posNewTaskX)+100);
+           bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0].setAttribute('y',  parseInt(posNewTaskY)+5);
+
+           var bpmnString = new XMLSerializer().serializeToString(bpmnXml);
+
+           sessionStorage.bpmn = encodeURIComponent(bpmnString);
+          
+           location.reload();
         }
 
         
@@ -147,7 +169,7 @@ $(function() {
 
 </script>
 
-  <script src="index.js"></script>
+  <script src="index.js" onload="$('#loading').hide();"></script>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js" type="text/javascript"></script>

@@ -8,15 +8,15 @@ function createTask(incoming, outgoing) {
     	key:   "id",
     	value: taskId
 	});	
-	var taskTag = tagFactory('Task', attr);
+	var taskTag = tagFactory('bpmn2:Task', attr);
 	if(incoming.length > 1){
-		var incomingTag = tagFactory('incoming', []);
+		var incomingTag = tagFactory('bpmn2:incoming', []);
 		var contentTag = textTag(incoming);
 		incomingTag.appendChild(contentTag);
 		taskTag.appendChild(incomingTag);
 	}
 	if(outgoing.length > 1){
-		var outgoingTag = tagFactory('outgoing', []);
+		var outgoingTag = tagFactory('bpmn2:outgoing', []);
 		var contentTag = textTag(outgoing);
 		outgoingTag.appendChild(contentTag);
 		taskTag.appendChild(outgoingTag);
@@ -30,7 +30,7 @@ function tagFactory(type, attr) {
 	var parse = new DOMParser();
 	var xmlDoc = parse.parseFromString('<a></a>', 'text/xml');
 	
-	var tag = xmlDoc.createElement("bpmn2:" + type);
+	var tag = xmlDoc.createElement(type);
 	var prop;
 	var size = attr.length;
 	for (var i = 0; i < size; i++) {
@@ -69,10 +69,167 @@ function createSequenceFlowTag(id, sourceRef, targetRef) {
     	value: id
 	});		
 
-	var tag = tagFactory('sequenceFlow', attr);
+	var tag = tagFactory('bpmn2:sequenceFlow', attr);
 	//tag.setAttribute('sourceRef', sourceRef);
 
 	console.log(tag);
 
 	return tag;
 }
+
+function getDeeperElement(xml) {
+	console.log(xml);
+	var bounds = xml.getElementsByTagName('dc:Bounds');
+	var maxY = -99999999999999;
+	var height,y;
+	for (var i=0; i < bounds.length; i++){
+		y = bounds[0].getAttribute('y');
+		height = bounds[0].getAttribute('height');
+		y = parseInt(y) + 4 * parseInt(height);
+		if(y > maxY) {
+			maxY = y;
+		}
+	}
+
+	return maxY;
+}
+
+
+function getXPosElement(elementId, xml) {
+	var tagId = elementId + "_di";
+	var xPosition;
+
+	var x = xml.getElementById(tagId).getElementsByTagName('dc:Bounds')[0].getAttribute('x');
+
+	xPosition = x;
+
+	return xPosition;
+}
+
+
+ function getSelectedElementPosX(id, xml) {
+
+ 	var tagId = id + "_di";
+
+	var xPosition;
+
+	var x = xml.getElementById(tagId).getElementsByTagName('dc:Bounds')[0].getAttribute('x');
+
+	var height =  xml.getElementById(tagId).getElementsByTagName('dc:Bounds')[0].getAttribute('height');
+
+	xPosition = parseInt(x) + parseInt(height);
+
+	return xPosition;
+
+
+ }
+
+
+ function getSelectedElementPosY(id, xml){ 
+
+
+ 	var tagId = id + "_di";
+
+	var yPosition;
+
+	var y = xml.getElementById(tagId).getElementsByTagName('dc:Bounds')[0].getAttribute('y');
+
+	var width =  xml.getElementById(tagId).getElementsByTagName('dc:Bounds')[0].getAttribute('width');
+
+	yPosition = parseInt(y) + (parseInt(width)/2);
+
+	return yPosition;
+
+ }
+
+
+
+ function createTaskGraphic(id, posX, posY, height, width) {
+
+ 	var parse = new DOMParser();
+	var xmlDoc = parse.parseFromString('<a></a>', 'text/xml');
+
+	var attr = [];
+
+	attr.push({
+    	key:   "id",
+    	value: id + "_di"
+	},{
+    	key:   "bpmnElement",
+    	value: id
+	});
+
+	var tag = tagFactory('bpmndi:BPMNShape', attr);
+
+	attr = [];
+
+	attr.push({
+    	key:   "x",
+    	value: posX
+	},{
+    	key:   "y",
+    	value: posY
+	},{
+    	key:   "width",
+    	value: width
+	},{
+    	key:   "height",
+    	value: height
+	});
+
+
+	var bounds = tagFactory('dc:Bounds', attr);
+
+	tag.appendChild(bounds);
+
+	return tag;
+
+ }
+
+
+ function createSQGraphic(id, posX_1, posY_1, posX_2, posY_2) {
+
+ 	var parse = new DOMParser();
+	var xmlDoc = parse.parseFromString('<a></a>', 'text/xml');
+
+	var attr = [];
+
+	attr.push({
+    	key:   "id",
+    	value: id + "_di"
+	},{
+    	key:   "bpmnElement",
+    	value: id
+	});
+
+	var tag = tagFactory('bpmndi:BPMNEdge', attr);
+
+	attr = [];
+
+	attr.push({
+    	key:   "x",
+    	value: posX_1
+	},{
+    	key:   "y",
+    	value: posY_1
+	});
+
+	var wp1 = tagFactory('di:waypoint', attr);
+
+	attr = [];
+
+	attr.push({
+    	key:   "x",
+    	value: posX_2
+	},{
+    	key:   "y",
+    	value: posY_2
+	});
+
+	var wp2 = tagFactory('di:waypoint', attr);
+
+	tag.appendChild(wp1);
+	tag.appendChild(wp2);
+
+	return tag;
+ }	
