@@ -243,7 +243,7 @@ function getXPosElement(elementId, xml) {
 
  function operationInsertSerial (selectedElement, bpmnXml) {
 
- 	var elementXml = bpmnXml.getElementById(selectedElement);        
+   var elementXml = bpmnXml.getElementById(selectedElement);        
    var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;                
    var newOutgoingSequenceFlow = createSequenceFlowId();           
    elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML = newOutgoingSequenceFlow;           
@@ -271,6 +271,34 @@ function getXPosElement(elementId, xml) {
    bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0].setAttribute('y',  parseInt(posNewTaskY)+5);
 
    var bpmnString = xml2String(bpmnXml);   
+
+   return bpmnString;
+
+ }
+
+
+  function operationDelete(selectedElement, bpmnXml) {
+
+   var elementXml = bpmnXml.getElementById(selectedElement);        
+   var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;
+   var incomingSequenceFlow = elementXml.getElementsByTagName('bpmn2:incoming')[0].innerHTML;
+
+   var outgoingSequenceFlowDestinationElement = bpmnXml.getElementById(outgoingSequenceFlow).getAttribute('targetRef');
+
+   bpmnXml.getElementById(incomingSequenceFlow).setAttribute('targetRef', outgoingSequenceFlowDestinationElement);
+   bpmnXml.getElementById(outgoingSequenceFlowDestinationElement).getElementsByTagName('bpmn2:incoming')[0].innerHTML = incomingSequenceFlow;
+
+   bpmnXml.getElementById(incomingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1] = bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1];
+
+   /*bpmnXml.removeChild(bpmnXml.getElementById(selectedElement));   
+
+   bpmnXml.removeChild(bpmnXml.getElementById(outgoingSequenceFlow));
+
+   bpmnXml.removeChild(bpmn.getElementById(elementXml + "_di"));
+
+   bpmnXml.removeChild(bpmn.getElementById(removeSF + "_di"));*/
+
+   var bpmnString = xml2String(bpmnXml);
 
    return bpmnString;
    

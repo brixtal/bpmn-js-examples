@@ -96,28 +96,20 @@ $(function() {
 
         
         if(key == "insert-c"){
-          /*action = $('div[data-action="append.gateway"]');
-          action.trigger("click");
-          var gateway = $('.selected');
-          
-          action = $('div[data-action="append.append-task"]');
-          alert (gateway.attr("data-element-id"));
-          action.trigger("click");
-          gateway.trigger("focus");
-          gateway.trigger("hover");
-          action = $('div[data-action="append.append-task"]');    */
-
-
-          
-
-          location.reload();    
+                    
+          alert('Not defined yet.');    
         }
         if(key == "delete") {
-          action = $('div[data-action="delete"]');
+          
+          selectedElement = $(this).attr("data-element-id");
+
+          var bpmnString = operationDelete(selectedElement, bpmnXml);
+
+          sessionStorage.bpmn = encodeURIComponent(bpmnString);
+
+          location.reload();
         }
-        //action.trigger("click");
-        //alert(teste);
-            },
+        },
             items: {
                 "extend": {name: "Extend"},
                 "delete": {name: "Delete"},
