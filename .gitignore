@@ -1,5 +1,5 @@
 .idea
-.ini
+*.ini
 *.iml
 .DS_Store
 npm-debug.log
