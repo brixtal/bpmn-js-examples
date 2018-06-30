@@ -8,15 +8,15 @@ function createTask(incoming, outgoing) {
     	key:   "id",
     	value: taskId
 	});	
-	var taskTag = tagFactory('bpmn2:Task', attr);
+	var taskTag = tagFactory('bpmn:Task', attr);
 	if(incoming.length > 1){
-		var incomingTag = tagFactory('bpmn2:incoming', []);
+		var incomingTag = tagFactory('bpmn:incoming', []);
 		var contentTag = textTag(incoming);
 		incomingTag.appendChild(contentTag);
 		taskTag.appendChild(incomingTag);
 	}
 	if(outgoing.length > 1){
-		var outgoingTag = tagFactory('bpmn2:outgoing', []);
+		var outgoingTag = tagFactory('bpmn:outgoing', []);
 		var contentTag = textTag(outgoing);
 		outgoingTag.appendChild(contentTag);
 		taskTag.appendChild(outgoingTag);
@@ -69,7 +69,7 @@ function createSequenceFlowTag(id, sourceRef, targetRef) {
     	value: id
 	});		
 
-	var tag = tagFactory('bpmn2:sequenceFlow', attr);
+	var tag = tagFactory('bpmn:sequenceFlow', attr);
 	//tag.setAttribute('sourceRef', sourceRef);
 
 	console.log(tag);
@@ -244,14 +244,14 @@ function getXPosElement(elementId, xml) {
  function operationInsertSerial (selectedElement, bpmnXml) {
 
    var elementXml = bpmnXml.getElementById(selectedElement);        
-   var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;                
+   var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML;                
    var newOutgoingSequenceFlow = createSequenceFlowId();           
-   elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML = newOutgoingSequenceFlow;           
+   elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML = newOutgoingSequenceFlow;           
    var newTask = createTask(newOutgoingSequenceFlow, outgoingSequenceFlow);
    var newSequenceFlow = createSequenceFlowTag(newOutgoingSequenceFlow, selectedElement, newTask.id);
    bpmnXml.getElementById(outgoingSequenceFlow).setAttribute('sourceRef', newTask.id);
-   bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newSequenceFlow);
-   bpmnXml.getElementsByTagName('bpmn2:process')[0].appendChild(newTask);
+   bpmnXml.getElementsByTagName('bpmn:process')[0].appendChild(newSequenceFlow);
+   bpmnXml.getElementsByTagName('bpmn:process')[0].appendChild(newTask);
 
    var posNewTaskY = getDeeperElement(bpmnXml);
    var posNewTaskX = getXPosElement(selectedElement, bpmnXml);
@@ -280,20 +280,20 @@ function getXPosElement(elementId, xml) {
   function operationDelete(selectedElement, bpmnXml) {
 	try {
 	   var elementXml = bpmnXml.getElementById(selectedElement);        
-	   var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;
-	   var incomingSequenceFlow = elementXml.getElementsByTagName('bpmn2:incoming')[0].innerHTML;
+	   var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML;
+	   var incomingSequenceFlow = elementXml.getElementsByTagName('bpmn:incoming')[0].innerHTML;
 
 	   var outgoingSequenceFlowDestinationElement = bpmnXml.getElementById(outgoingSequenceFlow).getAttribute('targetRef');
 
 	   bpmnXml.getElementById(incomingSequenceFlow).setAttribute('targetRef', outgoingSequenceFlowDestinationElement);
-	   bpmnXml.getElementById(outgoingSequenceFlowDestinationElement).getElementsByTagName('bpmn2:incoming')[0].innerHTML = incomingSequenceFlow;
+	   bpmnXml.getElementById(outgoingSequenceFlowDestinationElement).getElementsByTagName('bpmn:incoming')[0].innerHTML = incomingSequenceFlow;
 
 	   bpmnXml.getElementById(incomingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].setAttribute('x', bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].getAttribute('x'));
 	   bpmnXml.getElementById(incomingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].setAttribute('y', bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].getAttribute('y')); 
 
-	   bpmnXml.getElementsByTagName('bpmn2:process')[0].removeChild(bpmnXml.getElementById(selectedElement));
+	   bpmnXml.getElementsByTagName('bpmn:process')[0].removeChild(bpmnXml.getElementById(selectedElement));
 
-	   bpmnXml.getElementsByTagName('bpmn2:process')[0].removeChild(bpmnXml.getElementById(outgoingSequenceFlow));
+	   bpmnXml.getElementsByTagName('bpmn:process')[0].removeChild(bpmnXml.getElementById(outgoingSequenceFlow));
 
 	   bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].removeChild(bpmnXml.getElementById(selectedElement + "_di"));
 
@@ -307,6 +307,37 @@ function getXPosElement(elementId, xml) {
    
  }
 
+ function operationMerge(selectedHtmlElement, bpmnXml) {
+
+	var selectedElement = [];
+	var name = '';
+	var elementId;
+
+	var newName = "";
+
+	for (var i = 0; i < selectedHtmlElement.length; i++) {
+		if(selectedHtmlElement[i].getAttribute('data-element-id') != null) {
+			elementId = selectedHtmlElement[i].getAttribute('data-element-id');			
+			selectedElement.push(elementId);
+
+			name = bpmnXml.getElementById(elementId).getAttribute('name');
+
+			if (i == 0){
+				newName = name;
+			}
+			else {
+				newName = newName + " & " + name;
+			}			
+		}
+	}
+	
+	bpmnXml = setNameElement(selectedElement[0], newName, bpmnXml);
+
+	var bpmnString = operationDelete(selectedElement[1], bpmnXml);
+
+	return bpmnString;
+ }
+
  function isValidElement(elementId, operation) {
 	var invalidElements = [];	
  	if(operation =='delete') {
@@ -318,5 +349,13 @@ function getXPosElement(elementId, xml) {
  	}
  	
  	return true;
+
+ }
+
+ function setNameElement(id, name, bpmnXml) {
+
+ 	bpmnXml.getElementById(id).setAttribute('name', name);
+
+ 	return bpmnXml;
 
  }

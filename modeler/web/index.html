@@ -105,16 +105,9 @@ $(function() {
         
         if(key == "merge"){
                     
-          var selectedHtmlElement = $('#js-canvas')[0].getElementsByClassName('selected');
-          selectedElement = [];
+          var selectedHtmlElement = $('#js-canvas')[0].getElementsByClassName('selected');          
 
-          for (var i = 0; i < selectedHtmlElement.length; i++) {
-            if(selectedHtmlElement[i].getAttribute('data-element-id') != null) {
-              selectedElement.push(selectedHtmlElement[i].getAttribute('data-element-id'));
-            }
-          }
-
-          var bpmnString = operationDelete(selectedElement[1], bpmnXml);
+          var bpmnString = operationMerge(selectedHtmlElement, bpmnXml);
 
           sessionStorage.bpmn = encodeURIComponent(bpmnString);
 
