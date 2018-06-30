@@ -1,5 +1,5 @@
 
-function createTask(incoming, outgoing) {
+function createTask(incoming, outgoing, name) {
 
 	var taskId = 'Task_' + Math.random().toString().replace('0.','');
 	var attr = [];
@@ -7,6 +7,9 @@ function createTask(incoming, outgoing) {
 	attr.push({
     	key:   "id",
     	value: taskId
+	}, {
+		key: "name",
+		value: name
 	});	
 	var taskTag = tagFactory('bpmn:Task', attr);
 	if(incoming.length > 1){
@@ -246,8 +249,10 @@ function getXPosElement(elementId, xml) {
    var elementXml = bpmnXml.getElementById(selectedElement);        
    var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML;                
    var newOutgoingSequenceFlow = createSequenceFlowId();           
-   elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML = newOutgoingSequenceFlow;           
-   var newTask = createTask(newOutgoingSequenceFlow, outgoingSequenceFlow);
+   elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML = newOutgoingSequenceFlow;
+   var name = prompt("Please enter the new task name:", "New Task"); 
+   if(name == null) name = '';   
+   var newTask = createTask(newOutgoingSequenceFlow, outgoingSequenceFlow, name);
    var newSequenceFlow = createSequenceFlowTag(newOutgoingSequenceFlow, selectedElement, newTask.id);
    bpmnXml.getElementById(outgoingSequenceFlow).setAttribute('sourceRef', newTask.id);
    bpmnXml.getElementsByTagName('bpmn:process')[0].appendChild(newSequenceFlow);
