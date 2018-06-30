@@ -84,14 +84,22 @@ $(function() {
                 var m = key + " on " + $(this).attr("data-element-id");
         var action, selectedElement;
         window.console && console.log(m); 
+        selectedElement = $(this).attr("data-element-id");
         if(key == "insert-s"){
-           selectedElement = $(this).attr("data-element-id");
-           
-           var bpmnString = operationInsertSerial (selectedElement, bpmnXml);
-
-           sessionStorage.bpmn = encodeURIComponent(bpmnString);
           
-           location.reload();
+
+           if (isValidElement(selectedElement, key)){            
+             
+             var bpmnString = operationInsertSerial (selectedElement, bpmnXml);
+
+             sessionStorage.bpmn = encodeURIComponent(bpmnString);
+            
+             location.reload();
+           }
+           else {
+            alert('É inválido');
+           }
+
         }
 
         
@@ -100,14 +108,18 @@ $(function() {
           alert('Not defined yet.');    
         }
         if(key == "delete") {
-          
-          selectedElement = $(this).attr("data-element-id");
+          if (isValidElement(selectedElement, key)){ 
+            
 
-          var bpmnString = operationDelete(selectedElement, bpmnXml);
+            var bpmnString = operationDelete(selectedElement, bpmnXml);
 
-          sessionStorage.bpmn = encodeURIComponent(bpmnString);
+            sessionStorage.bpmn = encodeURIComponent(bpmnString);
 
-          location.reload();
+            location.reload();
+          }
+          else {
+            alert("You can't delete " + selectedElement);
+          }
         }
         },
             items: {

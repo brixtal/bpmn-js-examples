@@ -278,29 +278,45 @@ function getXPosElement(elementId, xml) {
 
 
   function operationDelete(selectedElement, bpmnXml) {
+	try {
+	   var elementXml = bpmnXml.getElementById(selectedElement);        
+	   var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;
+	   var incomingSequenceFlow = elementXml.getElementsByTagName('bpmn2:incoming')[0].innerHTML;
 
-   var elementXml = bpmnXml.getElementById(selectedElement);        
-   var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn2:outgoing')[0].innerHTML;
-   var incomingSequenceFlow = elementXml.getElementsByTagName('bpmn2:incoming')[0].innerHTML;
+	   var outgoingSequenceFlowDestinationElement = bpmnXml.getElementById(outgoingSequenceFlow).getAttribute('targetRef');
 
-   var outgoingSequenceFlowDestinationElement = bpmnXml.getElementById(outgoingSequenceFlow).getAttribute('targetRef');
+	   bpmnXml.getElementById(incomingSequenceFlow).setAttribute('targetRef', outgoingSequenceFlowDestinationElement);
+	   bpmnXml.getElementById(outgoingSequenceFlowDestinationElement).getElementsByTagName('bpmn2:incoming')[0].innerHTML = incomingSequenceFlow;
 
-   bpmnXml.getElementById(incomingSequenceFlow).setAttribute('targetRef', outgoingSequenceFlowDestinationElement);
-   bpmnXml.getElementById(outgoingSequenceFlowDestinationElement).getElementsByTagName('bpmn2:incoming')[0].innerHTML = incomingSequenceFlow;
+	   bpmnXml.getElementById(incomingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].setAttribute('x', bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].getAttribute('x'));
+	   bpmnXml.getElementById(incomingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].setAttribute('y', bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].getAttribute('y')); 
 
-   bpmnXml.getElementById(incomingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].setAttribute('x', bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].getAttribute('x'));
-   bpmnXml.getElementById(incomingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].setAttribute('y', bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[1].getAttribute('y')); 
+	   bpmnXml.getElementsByTagName('bpmn2:process')[0].removeChild(bpmnXml.getElementById(selectedElement));
 
-   bpmnXml.getElementsByTagName('bpmn2:process')[0].removeChild(bpmnXml.getElementById(selectedElement));
+	   bpmnXml.getElementsByTagName('bpmn2:process')[0].removeChild(bpmnXml.getElementById(outgoingSequenceFlow));
 
-   bpmnXml.getElementsByTagName('bpmn2:process')[0].removeChild(bpmnXml.getElementById(outgoingSequenceFlow));
+	   bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].removeChild(bpmnXml.getElementById(selectedElement + "_di"));
 
-   bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].removeChild(bpmnXml.getElementById(selectedElement + "_di"));
-
-   bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].removeChild(bpmnXml.getElementById(outgoingSequenceFlow + "_di"));
-
-   var bpmnString = xml2String(bpmnXml);
-
-   return bpmnString;
+	   bpmnXml.getElementsByTagName('bpmndi:BPMNPlane')[0].removeChild(bpmnXml.getElementById(outgoingSequenceFlow + "_di"));	  
+	}
+	catch (err) {
+		alert("ERROR:" + err.message);
+	}
+	var bpmnString = xml2String(bpmnXml);
+	return bpmnString;
    
+ }
+
+ function isValidElement(elementId, operation) {
+	var invalidElements = [];	
+ 	if(operation =='delete') {
+ 		invalidElements = ['StartEvent', 'EndEvent'];
+ 	}
+ 	for (var i=0; i < invalidElements.length; i++){
+ 		console.log(elementId.indexOf(invalidElements[i]));
+ 		if(elementId.indexOf(invalidElements[i]) >= 0) return false;
+ 	}
+ 	
+ 	return true;
+
  }
