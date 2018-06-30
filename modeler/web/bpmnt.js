@@ -123,8 +123,6 @@ function getXPosElement(elementId, xml) {
 	xPosition = parseInt(x) + parseInt(height);
 
 	return xPosition;
-
-
  }
 
 
@@ -275,7 +273,7 @@ function getXPosElement(elementId, xml) {
    bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0].setAttribute('x', parseInt(posNewTaskX)+100);
    bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0].setAttribute('y',  parseInt(posNewTaskY)+5);
 
-   var bpmnString = xml2String(bpmnXml);   
+   var bpmnString = xml2String(bpmnXml);
 
    return bpmnString;
 

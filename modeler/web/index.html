@@ -5,24 +5,13 @@
   <link rel="stylesheet" href="css/diagram-js.css" />
   <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css" />
   <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/bpmnt.css" />
   <link rel="stylesheet" href="css/jquery.contextMenu.css" />
   
   
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
  <script src="./jquery.contextMenu.js"></script>
  <script src="./bpmnt.js"></script>
-
- <style>
-
-  .centered {
-  position: fixed; /* or absolute */
-  top: 50%;
-  left: 50%;
-  font-size: 30px;
-}
-
- </style>
-
     
 </head>
 <body>
@@ -49,6 +38,7 @@
 
     <div class="canvas" id="js-canvas"></div>
   </div>
+  <input type="button" value="download" class='download_bpmn' onclick='download()'>
 
   <ul class="buttons">
     <li>
@@ -65,7 +55,7 @@
       </a>
     </li>
   </ul>
-
+</body>
   <script>
 
 var parser = new DOMParser();
