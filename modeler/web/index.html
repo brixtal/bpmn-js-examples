@@ -103,9 +103,23 @@ $(function() {
         }
 
         
-        if(key == "insert-c"){
+        if(key == "merge"){
                     
-          alert('Not defined yet.');    
+          var selectedHtmlElement = $('#js-canvas')[0].getElementsByClassName('selected');
+          selectedElement = [];
+
+          for (var i = 0; i < selectedHtmlElement.length; i++) {
+            if(selectedHtmlElement[i].getAttribute('data-element-id') != null) {
+              selectedElement.push(selectedHtmlElement[i].getAttribute('data-element-id'));
+            }
+          }
+
+          var bpmnString = operationDelete(selectedElement[1], bpmnXml);
+
+          sessionStorage.bpmn = encodeURIComponent(bpmnString);
+
+          location.reload();
+
         }
         if(key == "delete") {
           if (isValidElement(selectedElement, key)){ 
