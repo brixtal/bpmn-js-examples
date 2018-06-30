@@ -369,3 +369,41 @@ function getXPosElement(elementId, xml) {
  	return bpmnXml;
 
  }
+
+ function getDateTime() {
+	var date = new Date();
+
+	date = date.getFullYear() + '-' + addZero(date.getMonth()+1) + '-' + addZero(date.getDate()) + '-' + addZero(date.getHours()) + '-' + addZero(date.getMinutes()) + '-' + addZero(date.getSeconds()) + '-' + add3Zero(date.getMilliseconds());
+
+	return date;
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function add3Zero(i){
+		if(i < 10) {
+			return "00" + i;
+		}
+		if(i < 100){
+			return "0" + i;
+		}
+		return i;		
+	}
+ }
+
+ function download() {
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:application/bpmn20-xml;charset=UTF-8,' + sessionStorage.bpmn);
+	element.setAttribute('download', getDateTime() + '.bpmn');
+  
+	element.style.display = 'none';
+	document.body.appendChild(element);
+  
+	element.click();
+  
+	document.body.removeChild(element);
+  }

@@ -1,0 +1,27 @@
+<html>
+<head>
+
+
+</head>
+<body>
+    <input id="fileInput" type="file" accept=".bpmn"/>
+
+    <script>
+        var x;
+    document.getElementById('fileInput').addEventListener('change', function(e) {             
+        console.log(e.target.files[0]);
+        x = e.target.files[0];
+        var fileReader = new FileReader();
+        fileReader.onload = function(fileLoadedEvent){
+            var textFromFileLoaded = fileLoadedEvent.target.result;
+            sessionStorage.bpmn = encodeURIComponent(textFromFileLoaded);
+            window.location = './index.html';
+        }
+
+        fileReader.readAsText(x, "UTF-8");
+    });
+    
+    </script>
+</body>
+
+</html>
