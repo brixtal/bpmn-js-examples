@@ -102,6 +102,16 @@ $(function() {
 
         }
 
+        if(key == 'rename') {
+          
+          var name = prompt("Please enter the new name:", ""); 
+          if(name == null) name = ''; 
+
+          sessionStorage.bpmn =  encodeURIComponent(xml2String(setNameElement(selectedElement, name, bpmnXml)));
+
+          location.reload();
+        }
+
         
         if(key == "merge"){
                     
@@ -129,32 +139,31 @@ $(function() {
           }
         }
         },
-            items: {
-                "extend": {name: "Extend"},
-                "delete": {name: "Delete"},
-                "replace": {name: "Replace"},
-                "move": {name: "Move"},
-                "paralellize": {name: "Paralellize"},
-                "encapsulate": {name: "Encapsulate"},
-        "split": {name: "Split"},
-        "merge": {name: "Merge"},
-        "rename": {name: "Rename"},
-        "fold1": {
-          "name":"Exception",
-          "items": {
-            "exception-h": {name: "Handler"},
-            "exception-f": {name: "Flow"},
+          items: {
+              "delete": {name: "Delete"},
+              "replace": {name: "Replace", disabled: true},
+              "move": {name: "Move", disabled: true},
+              "paralellize": {name: "Paralellize", disabled: true},
+              "encapsulate": {name: "Encapsulate", disabled: true},
+              "split": {name: "Split", disabled: true},
+              "merge": {name: "Merge"},
+              "rename": {name: "Rename"},
+              "fold1": {
+                  "name":"Exception",
+                  "items": {
+                    "exception-h": {name: "Handler", disabled: true},
+                    "exception-f": {name: "Flow", disabled: true},
+                  }, disabled: true
+              },
+              "fold2": {
+                "name":"Insert",
+                "items": {
+                  "insert-s": {name: "Serial"},
+                  "insert-c": {name: "Conditional", disabled: true},
+                  "insert-e": {name: "Event-based", disabled: true}
+              }
+            }   
           }
-        },
-        "fold2": {
-          "name":"Insert",
-          "items": {
-            "insert-s": {name: "Serial"},
-            "insert-c": {name: "Conditional"},
-            "insert-e": {name: "Event-based"}
-          }
-        }   
-            }
         });
 
         $('.context-menu-one').on('click', function(e){
