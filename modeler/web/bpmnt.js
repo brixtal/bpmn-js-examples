@@ -332,9 +332,14 @@ function getXPosElement(elementId, xml) {
 	}
 	
 	bpmnXml = setNameElement(selectedElement[0], newName, bpmnXml);
-
-	var bpmnString = operationDelete(selectedElement[1], bpmnXml);
-
+	
+	var bpmnString = xml2String(bpmnXml);
+	var parser = new DOMParser();
+	var xml;
+	for (i=1; i < selectedElement.length; i++) {
+		xml = parser.parseFromString(bpmnString, 'text/xml');
+		bpmnString = operationDelete(selectedElement[i], xml);
+	}
 	return bpmnString;
  }
 
