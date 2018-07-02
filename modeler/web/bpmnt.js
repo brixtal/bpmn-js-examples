@@ -1,3 +1,20 @@
+var bpmntXmlPattern = 	  '<?xml version="1.0" encoding="UTF-8"?> \n'
+						+ '<definitions id="def1" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:BaseProcess="BaseProcess" xmlns:extension="http://www.extensions.com/bpmnt" targetNamespace="TailoredSpecificationAndDesign">\n'
+						+ '\t<import importType="http://www.w3.org/2001/XMLSchema" location="BPMNt.xsd" namespace="http://www.extensions.com/bpmnt"/>\n'
+						+ '\t<import importType="http://www.omg.org/spec/BPMN/20100524/MODEL" location="Specification_and_Design.bpmn" namespace="BaseProcess"/>\n'
+						+ '\t<extension mustUnderstand="true" definition="extension:bpmnt"/>\n'
+						+ '</definitions>';
+
+
+var parse = new DOMParser();
+
+var bpmntXmlParsed = parse.parseFromString(bpmntXmlPattern, 'text/xml');
+
+var processId;
+
+var tagBPMNtExtension = tagFactory('extensionElements', []);
+tagBPMNtExtension.appendChild(tagFactory('extension:bpmnt', []));
+tagBPMNtExtension.getElementsByTagName('extension:bpmnt')[0].appendChild(tagFactory('extension:useKind', []));
 
 function createTask(incoming, outgoing, name) {
 
@@ -30,7 +47,7 @@ function createTask(incoming, outgoing, name) {
 
 function tagFactory(type, attr) {
 
-	var parse = new DOMParser();
+	
 	var xmlDoc = parse.parseFromString('<a></a>', 'text/xml');
 	
 	var tag = xmlDoc.createElement(type);
@@ -45,7 +62,7 @@ function tagFactory(type, attr) {
 }
 
 function textTag(text) {
-	var parse = new DOMParser();
+	
 	var xmlDoc = parse.parseFromString('<a></a>', 'text/xml');
 
 	var textTag = xmlDoc.createTextNode(text);
@@ -147,7 +164,7 @@ function getXPosElement(elementId, xml) {
 
  function createTaskGraphic(id, posX, posY, height, width) {
 
- 	var parse = new DOMParser();
+ 	
 	var xmlDoc = parse.parseFromString('<a></a>', 'text/xml');
 
 	var attr = [];
@@ -190,7 +207,7 @@ function getXPosElement(elementId, xml) {
 
  function createSQGraphic(id, posX_1, posY_1, posX_2, posY_2) {
 
- 	var parse = new DOMParser();
+ 	
 	var xmlDoc = parse.parseFromString('<a></a>', 'text/xml');
 
 	var attr = [];
@@ -274,6 +291,8 @@ function getXPosElement(elementId, xml) {
    bpmnXml.getElementById(outgoingSequenceFlow + "_di").getElementsByTagName('di:waypoint')[0].setAttribute('y',  parseInt(posNewTaskY)+5);
 
    var bpmnString = xml2String(bpmnXml);
+
+   addOperationSerialInsertBPMNt(selectedElement);
 
    return bpmnString;
 
@@ -405,3 +424,44 @@ function getXPosElement(elementId, xml) {
   
 	document.body.removeChild(element);
   }
+
+
+  function initTailoring(xml) {
+	
+	var docXml = parse.parseFromString(xml, 'text/xml');
+
+	processId = docXml.getElementsByTagName('bpmn:process')[0].getAttribute('id');
+	
+	var processName = docXml.getElementsByTagName('bpmn:process')[0].getAttribute('name');
+	if(processName == null) processName = '';
+
+	var attr = [];
+
+	attr.push({
+		key: 'id',
+		value: 'Tailored_'+ processId
+	}, {
+		key: 'name',
+		value: processName
+	});
+
+	var tagProcess = tagFactory('process', attr);
+	
+	bpmntXmlParsed.getElementsByTagName('definitions')[0].appendChild(tagProcess);
+	bpmntXmlParsed.getElementById('Tailored_' + processId).appendChild(tagBPMNtExtension);
+	bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:useKind')[0].innerHTML = 'Extension';
+	bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extensionElements')[0].getElementsByTagName('extension:bpmnt')[0].appendChild(tagFactory('extension:usedBaseElement', []));
+	bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'Base Process:' + processId;
+
+	console.log(bpmntXmlParsed);
+
+  }
+
+  function addOperationSerialInsertBPMNt(id) {
+
+	tagBPMNtExtension.getElementsByTagName('extension:bpmnt')[0].appendChild('extension:useBaseElement');
+	
+
+  }
+
+  
