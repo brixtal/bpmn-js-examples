@@ -415,7 +415,7 @@ function getXPosElement(elementId, xml) {
  function download() {
 	var element = document.createElement('a');
 	element.setAttribute('href', 'data:application/bpmn20-xml;charset=UTF-8,' + sessionStorage.bpmn);
-	element.setAttribute('download', getDateTime() + '.bpmn');
+	element.setAttribute('download', 'diagram_' + getDateTime() + '.bpmn');
   
 	element.style.display = 'none';
 	document.body.appendChild(element);
@@ -425,6 +425,19 @@ function getXPosElement(elementId, xml) {
 	document.body.removeChild(element);
   }
 
+
+  function downloadBPMNt() {
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:application/bpmn20-xml;charset=UTF-8,' + encodeURIComponent(xml2String(bpmntXmlParsed)));
+	element.setAttribute('download', 'tailored_diagram_' + getDateTime() + '.bpmnt');
+  
+	element.style.display = 'none';
+	document.body.appendChild(element);
+  
+	element.click();
+  
+	document.body.removeChild(element);
+  }
 
   function initTailoring(xml) {
 	
@@ -459,9 +472,7 @@ function getXPosElement(elementId, xml) {
 
   function addOperationSerialInsertBPMNt(id) {
 
-	tagBPMNtExtension.getElementsByTagName('extension:bpmnt')[0].appendChild('extension:useBaseElement');
+	tagBPMNtExtension.getElementById('Tailored_'+ processId)[0].appendChild('extension:useBaseElement');
 	
 
-  }
-
-  
+  } 
