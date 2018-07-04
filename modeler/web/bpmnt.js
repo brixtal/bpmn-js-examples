@@ -409,17 +409,22 @@ function getXPosElement(elementId, xml) {
   }
 
 
-  function downloadBPMNt() {
-	var element = document.createElement('a');
-	element.setAttribute('href', 'data:application/bpmn20-xml;charset=UTF-8,' + sessionStorage.bpmnt);
-	element.setAttribute('download', 'tailored_diagram_' + getDateTime() + '.bpmnt');
-  
-	element.style.display = 'none';
-	document.body.appendChild(element);
-  
-	element.click();
-  
-	document.body.removeChild(element);
+  function downloadBPMNt() {	  
+	if(sessionStorage.bpmnt){
+		var element = document.createElement('a');
+		element.setAttribute('href', 'data:application/bpmn20-xml;charset=UTF-8,' + sessionStorage.bpmnt);
+		element.setAttribute('download', 'tailored_diagram_' + getDateTime() + '.bpmnt');
+	
+		element.style.display = 'none';
+		document.body.appendChild(element);
+	
+		element.click();
+	
+		document.body.removeChild(element);
+	}
+	else {
+		alert("There isn't a tailoring operation to be saved into a bpmnt file.")
+	}	
   }
 
   function initTailoring() {
