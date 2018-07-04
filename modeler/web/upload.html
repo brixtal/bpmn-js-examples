@@ -14,6 +14,7 @@
         fileReader.onload = function(fileLoadedEvent){
             var textFromFileLoaded = fileLoadedEvent.target.result;
             sessionStorage.bpmn = encodeURIComponent(textFromFileLoaded);
+            sessionStorage.tailoring = false;
             window.location = './index.html';
         }
 

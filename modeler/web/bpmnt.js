@@ -275,7 +275,7 @@ function getXPosElement(elementId, xml) {
 
    var bpmnString = xml2String(bpmnXml);
 
-   addOperationSerialInsertBPMNt(selectedElement);
+   addOperationSerialInsertBPMNt(selectedElement, name);
 
    return bpmnString;
 
@@ -306,6 +306,7 @@ function getXPosElement(elementId, xml) {
 	catch (err) {
 		alert("ERROR:" + err.message);
 	}
+	addOperationDeleteBPMNt(selectedElement, 'deleted_'+selectedElement);
 	var bpmnString = xml2String(bpmnXml);
 	return bpmnString;
    
@@ -422,17 +423,14 @@ function getXPosElement(elementId, xml) {
   }
 
   function initTailoring() {
-	if(!tailoring){
+	if(!sessionStorage.tailoring){
 
 		var bpmntXmlPattern = 	  '<?xml version="1.0" encoding="UTF-8"?> \n'
 						+ '<definitions id="def1" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:BaseProcess="BaseProcess" xmlns:extension="http://www.extensions.com/bpmnt" targetNamespace="TailoredSpecificationAndDesign">\n'
 						+ '\t<import importType="http://www.w3.org/2001/XMLSchema" location="BPMNt.xsd" namespace="http://www.extensions.com/bpmnt"/>\n'
 						+ '\t<import importType="http://www.omg.org/spec/BPMN/20100524/MODEL" location="Specification_and_Design.bpmn" namespace="BaseProcess"/>\n'
 						+ '\t<extension mustUnderstand="true" definition="extension:bpmnt"/>\n'
-						+ '</definitions>';
-
-
-		
+						+ '</definitions>';	
 
 		var bpmntXmlParsed = parse.parseFromString(bpmntXmlPattern, 'text/xml');
 
@@ -459,10 +457,9 @@ function getXPosElement(elementId, xml) {
 		
 		bpmntXmlParsed.getElementsByTagName('definitions')[0].appendChild(tagProcess);
 		bpmntXmlParsed.getElementById('Tailored_' + processId).appendChild(getDefaultBPMNtExtensionTag());
-		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:useKind')[0].innerHTML = 'Extension';
-		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extensionElements')[0].getElementsByTagName('extension:bpmnt')[0].appendChild(tagFactory('extension:usedBaseElement', []));
+		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:useKind')[0].innerHTML = 'Extension';		
 		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'Base Process:' + processId;
-
+		sessionStorage.tailoring = true;
 		sessionStorage.bpmnt = xml2String(bpmntXmlParsed);
 	}
   }
@@ -480,6 +477,42 @@ function getXPosElement(elementId, xml) {
 	initTailoring();
 
 	var bpmntXmlParsed = parse.parseFromString(sessionStorage.bpmnt, 'text/xml');
+	var processId = bpmntXmlParsed.getElementsByTagName('process')[0].getAttribute('id');
+
+	var attr = [];
+
+	attr.push({
+		key: 'id',
+		value: 'SerialInsert_' + id
+		}, {
+		key: 'name',
+		value: name
+	});
+
+	var tagTask = tagFactory('task', attr);
+	
+	var tagBPMNtExtension = getDefaultBPMNtExtensionTag();	
+
+	tagBPMNtExtension.getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'BaseProcess:'+ id;
+
+	tagBPMNtExtension.getElementsByTagName('extension:useKind')[0].innerHTML = 'SerialInsert';
+	
+	tagTask.appendChild(tagBPMNtExtension);
+
+	console.log(processId);
+
+	bpmntXmlParsed.getElementById(processId).appendChild(tagTask);
+
+	sessionStorage.bpmnt = xml2String(bpmntXmlParsed);
+
+  } 
+
+  function addOperationDeleteBPMNt(id, name) {
+	
+	initTailoring();
+
+	var bpmntXmlParsed = parse.parseFromString(sessionStorage.bpmnt, 'text/xml');
+	var processId = bpmntXmlParsed.getElementsByTagName('process')[0].getAttribute('id');
 
 	var attr = [];
 
@@ -497,11 +530,11 @@ function getXPosElement(elementId, xml) {
 
 	tagBPMNtExtension.getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'BaseProcess:'+ id;
 
-	tagBPMNtExtension.getElementsByTagName('extension:useKind')[0].innerHTML = 'SerialInsert';
+	tagBPMNtExtension.getElementsByTagName('extension:useKind')[0].innerHTML = 'Delete';
 	
 	tagTask.appendChild(tagBPMNtExtension);
 
-	bpmntXmlParsed.getElementById('Tailored_'+processId).appendChild(tagTask);
+	bpmntXmlParsed.getElementById(processId).appendChild(tagTask);
 
 	sessionStorage.bpmnt = xml2String(bpmntXmlParsed);
 
