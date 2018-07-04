@@ -1,26 +1,69 @@
 <html>
 <head>
-
+    <link rel="stylesheet" href="css/bpmnt.css" />
+    <script type="text/javascript" src="./bpmnt.js"></script>
 </head>
 <body>
-    <input id="fileInput" type="file" accept=".bpmn"/>
+    <input id="fileBPMN" type="file" accept=".bpmn" hidden='true' />
+    <input id="fileTailoredBPMNt" type="file" accept=".bpmnt" hidden='true'/>
+    <input id="fileOriginalBPMN" type="file" accept=".bpmn" hidden='true'/>
+
+    <input type="button" class='centeredButton button' value="Create new tailoring process" onclick="loadBPMN()"/> <br />
+    <input type="button" class='centeredButton button' value="Load tailored process" onclick="loadBPMNt()"/>
 
     <script>
         var x;
-    document.getElementById('fileInput').addEventListener('change', function(e) {             
-        console.log(e.target.files[0]);
-        x = e.target.files[0];
-        var fileReader = new FileReader();
-        fileReader.onload = function(fileLoadedEvent){
-            var textFromFileLoaded = fileLoadedEvent.target.result;
-            sessionStorage.bpmn = encodeURIComponent(textFromFileLoaded);
-            sessionStorage.tailoring = false;
-            window.location = './index.html';
+        document.getElementById('fileBPMN').addEventListener('change', function(e) {             
+            console.log(e.target.files[0]);
+            x = e.target.files[0];
+            var fileReader = new FileReader();
+            fileReader.onload = function(fileLoadedEvent){
+                var textFromFileLoaded = fileLoadedEvent.target.result;
+                sessionStorage.bpmn = encodeURIComponent(textFromFileLoaded);
+                sessionStorage.tailoring = false;
+                window.location = './index.html';
+            }
+            fileReader.readAsText(x, "UTF-8");
+        });
+
+        document.getElementById('fileTailoredBPMNt').addEventListener('change', function(e) {
+                console.log(e.target.files[0]);
+                x = e.target.files[0];
+                var fileReader = new FileReader();
+                fileReader.onload = function(fileLoadedEvent){
+                    var textFromFileLoaded = fileLoadedEvent.target.result;
+                    sessionStorage.bpmnt = encodeURIComponent(textFromFileLoaded);
+                    sessionStorage.tailoring = true;
+                    loadOperations();  
+                    window.location = './index.html';
+                }
+                fileReader.readAsText(x, "UTF-8");
+        });
+
+        document.getElementById('fileOriginalBPMN').addEventListener('change', function(e) {             
+                console.log(e.target.files[0]);
+                x = e.target.files[0];
+                var fileReader = new FileReader();
+                fileReader.onload = function(fileLoadedEvent){
+                    var textFromFileLoaded = fileLoadedEvent.target.result;
+                    sessionStorage.bpmn = encodeURIComponent(textFromFileLoaded);
+                    alert(sessionStorage.bpmn);
+                         
+                   
+                }
+                fileReader.readAsText(x, "UTF-8");
+        });    
+
+        function loadBPMNt () {
+                      
+            document.getElementById('fileOriginalBPMN').click();
+            document.getElementById('fileTailoredBPMNt').click();  
+            
         }
 
-        fileReader.readAsText(x, "UTF-8");
-    });
-    
+        function loadBPMN() {
+            document.getElementById('fileBPMN').click();
+        }
     </script>
 </body>
 

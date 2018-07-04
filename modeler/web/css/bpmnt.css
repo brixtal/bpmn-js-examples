@@ -24,6 +24,15 @@
     top: 50%;
     left: 50%;
     font-size: 30px;
+    color: black !important;
+  }
+
+  .centeredButton {
+    position: relative; /* or absolute */
+    top: 50%;
+    left: 50%;
+    font-size: 30px;
+    color: black !important;
   }
 
 /* button styles */
