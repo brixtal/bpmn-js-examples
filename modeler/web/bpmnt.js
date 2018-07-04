@@ -1,20 +1,6 @@
-var bpmntXmlPattern = 	  '<?xml version="1.0" encoding="UTF-8"?> \n'
-						+ '<definitions id="def1" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:BaseProcess="BaseProcess" xmlns:extension="http://www.extensions.com/bpmnt" targetNamespace="TailoredSpecificationAndDesign">\n'
-						+ '\t<import importType="http://www.w3.org/2001/XMLSchema" location="BPMNt.xsd" namespace="http://www.extensions.com/bpmnt"/>\n'
-						+ '\t<import importType="http://www.omg.org/spec/BPMN/20100524/MODEL" location="Specification_and_Design.bpmn" namespace="BaseProcess"/>\n'
-						+ '\t<extension mustUnderstand="true" definition="extension:bpmnt"/>\n'
-						+ '</definitions>';
-
-
 var parse = new DOMParser();
 
-var bpmntXmlParsed = parse.parseFromString(bpmntXmlPattern, 'text/xml');
-
 var processId;
-
-var tagBPMNtExtension = tagFactory('extensionElements', []);
-tagBPMNtExtension.appendChild(tagFactory('extension:bpmnt', []));
-tagBPMNtExtension.getElementsByTagName('extension:bpmnt')[0].appendChild(tagFactory('extension:useKind', []));
 
 function createTask(incoming, outgoing, name) {
 
@@ -160,8 +146,6 @@ function getXPosElement(elementId, xml) {
 
  }
 
-
-
  function createTaskGraphic(id, posX, posY, height, width) {
 
  	
@@ -203,7 +187,6 @@ function getXPosElement(elementId, xml) {
 	return tag;
 
  }
-
 
  function createSQGraphic(id, posX_1, posY_1, posX_2, posY_2) {
 
@@ -297,7 +280,6 @@ function getXPosElement(elementId, xml) {
    return bpmnString;
 
  }
-
 
   function operationDelete(selectedElement, bpmnXml) {
 	try {
@@ -428,7 +410,7 @@ function getXPosElement(elementId, xml) {
 
   function downloadBPMNt() {
 	var element = document.createElement('a');
-	element.setAttribute('href', 'data:application/bpmn20-xml;charset=UTF-8,' + encodeURIComponent(xml2String(bpmntXmlParsed)));
+	element.setAttribute('href', 'data:application/bpmn20-xml;charset=UTF-8,' + sessionStorage.bpmnt);
 	element.setAttribute('download', 'tailored_diagram_' + getDateTime() + '.bpmnt');
   
 	element.style.display = 'none';
@@ -439,40 +421,88 @@ function getXPosElement(elementId, xml) {
 	document.body.removeChild(element);
   }
 
-  function initTailoring(xml) {
-	
-	var docXml = parse.parseFromString(xml, 'text/xml');
+  function initTailoring() {
+	if(!tailoring){
 
-	processId = docXml.getElementsByTagName('bpmn:process')[0].getAttribute('id');
+		var bpmntXmlPattern = 	  '<?xml version="1.0" encoding="UTF-8"?> \n'
+						+ '<definitions id="def1" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:BaseProcess="BaseProcess" xmlns:extension="http://www.extensions.com/bpmnt" targetNamespace="TailoredSpecificationAndDesign">\n'
+						+ '\t<import importType="http://www.w3.org/2001/XMLSchema" location="BPMNt.xsd" namespace="http://www.extensions.com/bpmnt"/>\n'
+						+ '\t<import importType="http://www.omg.org/spec/BPMN/20100524/MODEL" location="Specification_and_Design.bpmn" namespace="BaseProcess"/>\n'
+						+ '\t<extension mustUnderstand="true" definition="extension:bpmnt"/>\n'
+						+ '</definitions>';
+
+
+		
+
+		var bpmntXmlParsed = parse.parseFromString(bpmntXmlPattern, 'text/xml');
+
+		var tailoring = false;
+		var xml = decodeURIComponent(sessionStorage.getItem("bpmn"));
+		var docXml = parse.parseFromString(xml, 'text/xml');
+
+		processId = docXml.getElementsByTagName('bpmn:process')[0].getAttribute('id');
+		
+		var processName = docXml.getElementsByTagName('bpmn:process')[0].getAttribute('name');
+		if(processName == null) processName = '';
+
+		var attr = [];
+
+		attr.push({
+			key: 'id',
+			value: 'Tailored_'+ processId
+		}, {
+			key: 'name',
+			value: processName
+		});
+
+		var tagProcess = tagFactory('process', attr);
+		
+		bpmntXmlParsed.getElementsByTagName('definitions')[0].appendChild(tagProcess);
+		bpmntXmlParsed.getElementById('Tailored_' + processId).appendChild(getDefaultBPMNtExtensionTag());
+		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:useKind')[0].innerHTML = 'Extension';
+		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extensionElements')[0].getElementsByTagName('extension:bpmnt')[0].appendChild(tagFactory('extension:usedBaseElement', []));
+		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'Base Process:' + processId;
+
+		sessionStorage.bpmnt = xml2String(bpmntXmlParsed);
+	}
+  }
+
+  function getDefaultBPMNtExtensionTag() {
+	var tagBPMNtExtension = tagFactory('extensionElements', []);
+	tagBPMNtExtension.appendChild(tagFactory('extension:bpmnt', []));
+	tagBPMNtExtension.getElementsByTagName('extension:bpmnt')[0].appendChild(tagFactory('extension:useKind', []));
+	tagBPMNtExtension.getElementsByTagName('extension:bpmnt')[0].appendChild(tagFactory('extension:usedBaseElement', []));
+	return tagBPMNtExtension;
+  }
+
+  function addOperationSerialInsertBPMNt(id, name) {
 	
-	var processName = docXml.getElementsByTagName('bpmn:process')[0].getAttribute('name');
-	if(processName == null) processName = '';
+	initTailoring();
+
+	var bpmntXmlParsed = parse.parseFromString(sessionStorage.bpmnt, 'text/xml');
 
 	var attr = [];
 
 	attr.push({
 		key: 'id',
-		value: 'Tailored_'+ processId
-	}, {
+		value: 'SerialInsert_' + id
+		}, {
 		key: 'name',
-		value: processName
+		value: name
 	});
 
-	var tagProcess = tagFactory('process', attr);
+	var tagTask = tagFactory('task', attr);
 	
-	bpmntXmlParsed.getElementsByTagName('definitions')[0].appendChild(tagProcess);
-	bpmntXmlParsed.getElementById('Tailored_' + processId).appendChild(tagBPMNtExtension);
-	bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:useKind')[0].innerHTML = 'Extension';
-	bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extensionElements')[0].getElementsByTagName('extension:bpmnt')[0].appendChild(tagFactory('extension:usedBaseElement', []));
-	bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'Base Process:' + processId;
+	var tagBPMNtExtension = getDefaultBPMNtExtensionTag();
 
-	console.log(bpmntXmlParsed);
+	tagBPMNtExtension.getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'BaseProcess:'+ id;
 
-  }
-
-  function addOperationSerialInsertBPMNt(id) {
-
-	tagBPMNtExtension.getElementById('Tailored_'+ processId)[0].appendChild('extension:useBaseElement');
+	tagBPMNtExtension.getElementsByTagName('extension:useKind')[0].innerHTML = 'SerialInsert';
 	
+	tagTask.appendChild(tagBPMNtExtension);
+
+	bpmntXmlParsed.getElementById('Tailored_'+processId).appendChild(tagTask);
+
+	sessionStorage.bpmnt = xml2String(bpmntXmlParsed);
 
   } 
