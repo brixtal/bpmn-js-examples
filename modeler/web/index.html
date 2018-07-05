@@ -106,7 +106,7 @@ $(function() {
           var name = prompt("Please enter the new name:", ""); 
           if(name == null) name = ''; 
 
-          sessionStorage.bpmn =  encodeURIComponent(xml2String(setNameElement(selectedElement, name, bpmnXml)));
+          sessionStorage.bpmn =  encodeURIComponent(operationRename(selectedElement, name, bpmnXml));
 
           location.reload();
         }

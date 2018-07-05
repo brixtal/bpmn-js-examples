@@ -47,9 +47,6 @@
                 fileReader.onload = function(fileLoadedEvent){
                     var textFromFileLoaded = fileLoadedEvent.target.result;
                     sessionStorage.bpmn = encodeURIComponent(textFromFileLoaded);
-                    alert(sessionStorage.bpmn);
-                         
-                   
                 }
                 fileReader.readAsText(x, "UTF-8");
         });    

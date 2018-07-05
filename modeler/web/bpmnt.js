@@ -249,12 +249,11 @@ function getXPosElement(elementId, xml) {
 
  function operationInsertSerial (selectedElement, bpmnXml, readingBPMNtFile = false, bpmntName='', bpmntTaskId='') {
 
-   var elementXml = bpmnXml.getElementById(selectedElement);
-   alert(selectedElement);
+   var elementXml = bpmnXml.getElementById(selectedElement);   
    var outgoingSequenceFlow = elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML;                
    var newOutgoingSequenceFlow = createSequenceFlowId();           
-   elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML = newOutgoingSequenceFlow;
-   if(!readBPMNtFile) {
+   elementXml.getElementsByTagName('bpmn:outgoing')[0].innerHTML = newOutgoingSequenceFlow;   
+   if(!readingBPMNtFile) {
 	var name = prompt("Please enter the new task name:", "New Task"); 	
 	var newTask = createTask(newOutgoingSequenceFlow, outgoingSequenceFlow, name);
    }
@@ -320,7 +319,7 @@ function getXPosElement(elementId, xml) {
 		alert("ERROR:" + err.message);
 	}
 	
-	if(!readBPMNtFile) {
+	if(!readingBPMNtFile) {
 		addOperationDeleteBPMNt(selectedElement, 'deleted_'+selectedElement);
 	}
 	var bpmnString = xml2String(bpmnXml);
@@ -338,7 +337,7 @@ function getXPosElement(elementId, xml) {
 
 	for (var i = 0; i < selectedHtmlElement.length; i++) {
 		if(selectedHtmlElement[i].getAttribute('data-element-id') != null) {
-			elementId = selectedHtmlElement[i].getAttribute('data-element-id');			
+			elementId = selectedHtmlElement[i].getAttribute('data-element-id');
 			selectedElement.push(elementId);
 
 			name = bpmnXml.getElementById(elementId).getAttribute('name');
@@ -363,6 +362,18 @@ function getXPosElement(elementId, xml) {
 	}
 	return bpmnString;
  }
+
+ function operationRename(id, name, bpmnXml, readingBPMNtFile = false) {
+
+	bpmnXml = setNameElement(id, name, bpmnXml);	
+	
+	if(!readingBPMNtFile) {
+		addOperationRenameBPMNt(id, name);
+	}
+	bpmnString = xml2String(bpmnXml);
+	return bpmnString;
+
+}
 
  function isValidElement(elementId, operation) {
 	var invalidElements = [];	
@@ -481,7 +492,7 @@ function getXPosElement(elementId, xml) {
 		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:useKind')[0].innerHTML = 'Extension';		
 		bpmntXmlParsed.getElementById('Tailored_' + processId).getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'BaseProcess:' + processId;
 		sessionStorage.tailoring = true;
-		sessionStorage.bpmnt = xml2String(bpmntXmlParsed);
+		sessionStorage.bpmnt = encodeURIComponent(xml2String(bpmntXmlParsed));
 	}
   }
 
@@ -497,8 +508,7 @@ function getXPosElement(elementId, xml) {
 	
 	initTailoring();
 
-	var bpmntXmlParsed = parse.parseFromString(sessionStorage.bpmnt, 'text/xml');
-	console.log(bpmntXmlParsed);
+	var bpmntXmlParsed = parse.parseFromString(decodeURIComponent(sessionStorage.bpmnt), 'text/xml');	
 	var processId = bpmntXmlParsed.getElementsByTagName('process')[0].getAttribute('id');
 
 	var attr = [];
@@ -525,7 +535,7 @@ function getXPosElement(elementId, xml) {
 
 	bpmntXmlParsed.getElementById(processId).appendChild(tagTask);
 
-	sessionStorage.bpmnt = xml2String(bpmntXmlParsed);
+	sessionStorage.bpmnt = encodeURIComponent(xml2String(bpmntXmlParsed));
 
   } 
 
@@ -533,14 +543,14 @@ function getXPosElement(elementId, xml) {
 	
 	initTailoring();
 
-	var bpmntXmlParsed = parse.parseFromString(sessionStorage.bpmnt, 'text/xml');
+	var bpmntXmlParsed = parse.parseFromString(decodeURIComponent(sessionStorage.bpmnt), 'text/xml');
 	var processId = bpmntXmlParsed.getElementsByTagName('process')[0].getAttribute('id');
 
 	var attr = [];
 
 	attr.push({
 		key: 'id',
-		value: 'SerialInsert_' + id
+		value: 'Delete_' + id
 		}, {
 		key: 'name',
 		value: name
@@ -558,7 +568,7 @@ function getXPosElement(elementId, xml) {
 
 	bpmntXmlParsed.getElementById(processId).appendChild(tagTask);
 
-	sessionStorage.bpmnt = xml2String(bpmntXmlParsed);
+	sessionStorage.bpmnt = encodeURIComponent(xml2String(bpmntXmlParsed));
 
   } 
 
@@ -586,7 +596,41 @@ function readBPMNtFile() {
 		}
 		else if(operation == "Delete"){
 			sessionStorage.bpmn = encodeURIComponent(operationDelete(elementId, xml, true));
-		}       
+		}
+		else if(operation == "Rename"){
+			sessionStorage.bpmn = encodeURIComponent(operationRename(elementId, name, xml, true));
+		}
     }
 
+}
+
+function addOperationRenameBPMNt(id, name) {
+	initTailoring();
+
+	var bpmntXmlParsed = parse.parseFromString(decodeURIComponent(sessionStorage.bpmnt), 'text/xml');
+	var processId = bpmntXmlParsed.getElementsByTagName('process')[0].getAttribute('id');
+
+	var attr = [];
+
+	attr.push({
+		key: 'id',
+		value: 'Rename_' + id
+		}, {
+		key: 'name',
+		value: name
+	});
+
+	var tagTask = tagFactory('task', attr);
+	
+	var tagBPMNtExtension = getDefaultBPMNtExtensionTag();
+
+	tagBPMNtExtension.getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'BaseProcess:'+ id;
+
+	tagBPMNtExtension.getElementsByTagName('extension:useKind')[0].innerHTML = 'Rename';
+	
+	tagTask.appendChild(tagBPMNtExtension);
+
+	bpmntXmlParsed.getElementById(processId).appendChild(tagTask);
+
+	sessionStorage.bpmnt = encodeURIComponent(xml2String(bpmntXmlParsed));
 }
