@@ -327,39 +327,45 @@ function getXPosElement(elementId, xml) {
    
  }
 
- function operationMerge(selectedHtmlElement, bpmnXml) {
-
+ function operationMerge(selectedHtmlElement, bpmnXml, nameBPMNt = '', readingBPMNtFile = false) {
 	var selectedElement = [];
-	var name = '';
-	var elementId;
-
 	var newName = "";
+	if(!readingBPMNtFile) {
+		
+		var name = '';
+		var elementId;		
 
-	for (var i = 0; i < selectedHtmlElement.length; i++) {
-		if(selectedHtmlElement[i].getAttribute('data-element-id') != null) {
-			elementId = selectedHtmlElement[i].getAttribute('data-element-id');
-			selectedElement.push(elementId);
+		for (var i = 0; i < selectedHtmlElement.length; i++) {
+			if(selectedHtmlElement[i].getAttribute('data-element-id') != null) {
+				elementId = selectedHtmlElement[i].getAttribute('data-element-id');
+				selectedElement.push(elementId);
 
-			name = bpmnXml.getElementById(elementId).getAttribute('name');
+				name = bpmnXml.getElementById(elementId).getAttribute('name');
 
-			if (i == 0){
-				newName = name;
-			}
-			else {
-				newName = newName + " & " + name;
-			}			
+				if (i == 0){
+					newName = name;
+				}
+				else {
+					newName = newName + " & " + name;
+				}			
+			}	
 		}
+		addOperationMerge(selectedElement, newName);
 	}
-	
+	else {
+		selectedElement = selectedHtmlElement;
+		newName = nameBPMNt;
+	}
 	bpmnXml = setNameElement(selectedElement[0], newName, bpmnXml);
-	
 	var bpmnString = xml2String(bpmnXml);
 	var parser = new DOMParser();
 	var xml;
+	alert();
 	for (i=1; i < selectedElement.length; i++) {
 		xml = parser.parseFromString(bpmnString, 'text/xml');
-		bpmnString = operationDelete(selectedElement[i], xml);
-	}
+		alert(selectedElement[i]);
+		bpmnString = operationDelete(selectedElement[i], xml, true);
+	}	
 	return bpmnString;
  }
 
@@ -589,7 +595,7 @@ function readBPMNtFile() {
 		var typeElement = extension[i].parentNode.parentNode.tagName;
 		var name = extension[i].parentNode.parentNode.getAttribute('name');
 		var taskId = extension[i].parentNode.parentNode.getAttribute('id');		
-		var xml = parser.parseFromString(decodeURIComponent(sessionStorage.bpmn), 'text/xml');		
+		var xml = parser.parseFromString(decodeURIComponent(sessionStorage.bpmn), 'text/xml');
 		if(operation == "SerialInsert"){			
 			taskId = taskId.replace('SerialInsert_', '');
 			sessionStorage.bpmn = encodeURIComponent(operationInsertSerial(elementId, xml, true, name, taskId));			
@@ -600,8 +606,15 @@ function readBPMNtFile() {
 		else if(operation == "Rename"){
 			sessionStorage.bpmn = encodeURIComponent(operationRename(elementId, name, xml, true));
 		}
+		else if(operation == 'Merge'){
+			var elements = elementId.split(';');
+			var mergeElements = [];
+			for(var i=0; i<elements.length; i++){
+				mergeElements.push(elements[i]);
+			}
+			sessionStorage.bpmn = encodeURIComponent(operationMerge(mergeElements, xml, name, true));
+		}
     }
-
 }
 
 function addOperationRenameBPMNt(id, name) {
@@ -633,4 +646,41 @@ function addOperationRenameBPMNt(id, name) {
 	bpmntXmlParsed.getElementById(processId).appendChild(tagTask);
 
 	sessionStorage.bpmnt = encodeURIComponent(xml2String(bpmntXmlParsed));
+}
+
+function addOperationMerge(selectedElements, newName) {
+
+	initTailoring();
+
+	var bpmntXmlParsed = parse.parseFromString(decodeURIComponent(sessionStorage.bpmnt), 'text/xml');	
+	var processId = bpmntXmlParsed.getElementsByTagName('process')[0].getAttribute('id');
+
+	var attr = [];
+
+	attr.push({
+		key: 'id',
+		value: 'Merge_' + selectedElements[0]
+		}, {
+		key: 'name',
+		value: newName
+	});
+
+	var tagTask = tagFactory('task', attr);
+	
+	var tagBPMNtExtension = getDefaultBPMNtExtensionTag();	
+
+	tagBPMNtExtension.getElementsByTagName('extension:usedBaseElement')[0].innerHTML = 'BaseProcess:' + selectedElements[0];
+
+	for(var i = 1; i< selectedElements.length; i++){
+		tagBPMNtExtension.getElementsByTagName('extension:usedBaseElement')[0].innerHTML = tagBPMNtExtension.getElementsByTagName('extension:usedBaseElement')[0].innerHTML + ";"+ selectedElements[i];
+	}
+
+	tagBPMNtExtension.getElementsByTagName('extension:useKind')[0].innerHTML = 'Merge';
+	
+	tagTask.appendChild(tagBPMNtExtension);
+
+	bpmntXmlParsed.getElementById(processId).appendChild(tagTask);
+
+	sessionStorage.bpmnt = encodeURIComponent(xml2String(bpmntXmlParsed));
+
 }
