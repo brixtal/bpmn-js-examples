@@ -360,10 +360,10 @@ function getXPosElement(elementId, xml) {
 	var bpmnString = xml2String(bpmnXml);
 	var parser = new DOMParser();
 	var xml;
-	alert();
+	
 	for (i=1; i < selectedElement.length; i++) {
 		xml = parser.parseFromString(bpmnString, 'text/xml');
-		alert(selectedElement[i]);
+		
 		bpmnString = operationDelete(selectedElement[i], xml, true);
 	}	
 	return bpmnString;
