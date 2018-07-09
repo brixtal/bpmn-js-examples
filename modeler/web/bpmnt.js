@@ -594,12 +594,14 @@ function readBPMNtFile() {
     var extension = bpmntFile.getElementsByTagName('extension:bpmnt'); 
 
     for(var i=0; i < extension.length; i++) {
+		
         var operation = extension[i].getElementsByTagName('extension:useKind')[0].innerHTML;
 		var elementId = extension[i].getElementsByTagName('extension:usedBaseElement')[0].innerHTML.replace('BaseProcess:', '');
 		var typeElement = extension[i].parentNode.parentNode.tagName;
 		var name = extension[i].parentNode.parentNode.getAttribute('name');
 		var taskId = extension[i].parentNode.parentNode.getAttribute('id');		
 		var xml = parser.parseFromString(decodeURIComponent(sessionStorage.bpmn), 'text/xml');
+		
 		if(operation == "SerialInsert"){			
 			taskId = taskId.replace('SerialInsert_', '');
 			sessionStorage.bpmn = encodeURIComponent(operationInsertSerial(elementId, xml, true, name, taskId));			
@@ -613,8 +615,8 @@ function readBPMNtFile() {
 		else if(operation == 'Merge'){
 			var elements = elementId.split(';');
 			var mergeElements = [];
-			for(var i=0; i<elements.length; i++){
-				mergeElements.push(elements[i]);
+			for(var j=0; j<elements.length; j++){
+				mergeElements.push(elements[j]);
 			}
 			sessionStorage.bpmn = encodeURIComponent(operationMerge(mergeElements, xml, name, true));
 		}
