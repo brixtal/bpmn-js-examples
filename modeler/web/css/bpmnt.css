@@ -1,21 +1,21 @@
 #download_bpmn {
     position: absolute; 
-    bottom: 15px; 
+    bottom: 0px; 
     left: 15px; 
     z-index: 100;
 }
 
 #download_bpmnt {
     position: absolute; 
-    bottom: 15px; 
+    bottom: 0px; 
     left: 175px; 
     z-index: 100;
 }
 
 #compare {
   position: absolute; 
-  bottom: 15px; 
-  right: 175px; 
+  bottom: 0px; 
+  right: 35px; 
   z-index: 100;
 }
 
