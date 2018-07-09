@@ -460,6 +460,10 @@ function getXPosElement(elementId, xml) {
 	}	
   }
 
+  function compare(){
+	  window.location = '../../../bpmnt-diffing/app/index.html';
+  }
+
   function initTailoring() {
 	if(!sessionStorage.tailoring || sessionStorage.tailoring == 'false'){
 		console.log('entrei');

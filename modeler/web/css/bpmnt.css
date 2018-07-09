@@ -1,15 +1,22 @@
-.download_bpmn {
+#download_bpmn {
     position: absolute; 
     bottom: 15px; 
     left: 15px; 
     z-index: 100;
 }
 
-.download_bpmnt {
+#download_bpmnt {
     position: absolute; 
     bottom: 15px; 
     left: 175px; 
     z-index: 100;
+}
+
+#compare {
+  position: absolute; 
+  bottom: 15px; 
+  right: 175px; 
+  z-index: 100;
 }
 
 .closeModel {
