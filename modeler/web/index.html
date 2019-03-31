@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>bpmn-js modeler demo</title>
+  <title>BPMNt++ Modeler</title>
 
   <link rel="stylesheet" href="css/diagram-js.css" />
   <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css" />
@@ -139,29 +139,12 @@ $(function() {
         }
         },
           items: {
-              "delete": {name: "Delete"},
+              "delete": {name: "Delete", disabled: true},
               "replace": {name: "Replace", disabled: true},
-              "move": {name: "Move", disabled: true},
-              "paralellize": {name: "Paralellize", disabled: true},
-              "encapsulate": {name: "Encapsulate", disabled: true},
               "split": {name: "Split", disabled: true},
-              "merge": {name: "Merge"},
-              "rename": {name: "Rename"},
-              "fold1": {
-                  "name":"Exception",
-                  "items": {
-                    "exception-h": {name: "Handler", disabled: true},
-                    "exception-f": {name: "Flow", disabled: true},
-                  }, disabled: true
-              },
-              "fold2": {
-                "name":"Insert",
-                "items": {
-                  "insert-s": {name: "Serial"},
-                  "insert-c": {name: "Conditional", disabled: true},
-                  "insert-e": {name: "Event-based", disabled: true}
-              }
-            }   
+              "merge": {name: "Merge", disabled: true},
+              "rename": {name: "Rename", disabled: true},
+              "insert": {name: "Insert" , disabled: true} 
           }
         });
 
