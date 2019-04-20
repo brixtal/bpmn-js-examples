@@ -5037,7 +5037,7 @@ function load_document(files, doc) {
     var reader;
     var me = this;
     if (file) {
-        console.log(file);
+        //console.log(file);
         //if (file.type.match(/^(text\/xml|text\/html|.*\+xml)$/)) {
             if(file.name.includes("bpmn") || file.name.includes("BPMN") || file.name.includes("xml") ){
             reader = new FileReader();
