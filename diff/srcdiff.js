@@ -5023,11 +5023,15 @@ function refresh() {
 
         doc1.ansrc = annotate_source(doc1, delta.matching, false);
         doc2.ansrc = annotate_source(doc2, delta.matching, true);
+        
     }
     $('#src1 > pre').html(doc1.ansrc);
     $('#src2 > pre').html(doc2.ansrc);
     delta2BPMNtpp(delta.src);
 
+    sessionStorage.bpmn = encodeURIComponent(doc1.src);
+    sessionStorage.bpmn2 = encodeURIComponent(doc2.src);
+    window.location.href = "../modeler/web/index.html";
     
     prettyPrint();
 }

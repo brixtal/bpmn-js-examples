@@ -57,7 +57,9 @@ function delta2BPMNtpp(deltaSrc){
     });
 
     console.log(removed, inserted, changed);
-
+    sessionStorage.removed = JSON.stringify(removed);
+    sessionStorage.inserted = JSON.stringify(inserted);
+    sessionStorage.changed = JSON.stringify(changed);
 }
 
 function isOrganizationalOrInformationalPerspective(innerHTML) {
