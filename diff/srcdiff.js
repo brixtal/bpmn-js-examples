@@ -5031,7 +5031,12 @@ function refresh() {
 
     sessionStorage.bpmn = encodeURIComponent(doc1.src);
     sessionStorage.bpmn2 = encodeURIComponent(doc2.src);
-    window.location.href = "../modeler/web/index.html";
+
+    var url = new URL(window.location.href);
+    var typeProcess = url.searchParams.get("debug");
+    if(debug != "true"){
+        window.location.href = "../modeler/web/index.html";
+    }
     
     prettyPrint();
 }
