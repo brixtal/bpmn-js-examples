@@ -11,6 +11,16 @@
 <script src="./jquery.contextMenu.js"></script>
 <script src="./bpmnt.js"></script>
 <script src="./bpmntpp.js"></script>
-
+<script>
+   function splitPage(){
+    document.getElementById('body').setAttribute('style',  'background-image: url("background.png");  background-color: white;  background-repeat: no-repeat; background-size:' + document.documentElement.clientWidth + 'px;');
+   }
+   
+</script>
+<body id='body'>
 <iframe src='./modeler.html?type=0' width="49%" height="100%" style='display: block; float:left; border: 0px;'></iframe>
 <iframe src='./modeler.html?type=1' width="49%" height="100%" style='display: block; float:right; border: 0px;'></iframe>
+</body>
+<script>
+    splitPage();
+</script>
