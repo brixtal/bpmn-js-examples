@@ -163,17 +163,19 @@ function refreshTable(){
             let trTemp = table.insertRow(linhas);
             op = trTemp.insertCell(0);
             op.innerHTML = "rename"
+            
             par = trTemp.insertCell(1);
             par.innerHTML = "renamedElement"
             attr = trTemp.insertCell(2);
             attr.innerHTML = changed[index].id;
             trTemp = table.insertRow(linhas+1);
-            op = trTemp.insertCell(0);
-            op.innerHTML = "rename"
-            par = trTemp.insertCell(1);
+            op.setAttribute('rowspan', "2");
+            
+            par = trTemp.insertCell(0);
             par.innerHTML = "newNameElement"
-            attr = trTemp.insertCell(2);
+            attr = trTemp.insertCell(1);
             attr.innerHTML = changed[index].newName;
+           
             linhas +=2;
         }
     }
