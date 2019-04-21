@@ -29,7 +29,9 @@ function getGraphicElementByDataElementId(id, type){
 
 function changeColor(element, color) {
     if(element != null){
-        element.setAttribute('style', element.getAttribute('style').replace("black", color));
+        if(!(typeProcess == 0 && color == 'orange')){
+            element.setAttribute('style', element.getAttribute('style').replace("black", color));
+        }
     }
 }
 
