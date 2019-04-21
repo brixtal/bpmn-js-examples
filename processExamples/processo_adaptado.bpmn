@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1jbrhwg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="3.3.1">
+  <bpmn:collaboration id="Collaboration_0dq1883">
+    <bpmn:participant id="Participant_0qfw5w3" name="Teste PA" processRef="Process_13a7goi" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_13a7goi">
+    <bpmn:laneSet id="LaneSet_0lgksda">
+      <bpmn:lane id="Lane_1xthsrw">
+        <bpmn:flowNodeRef>StartEvent_1moglkh</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_0zjgz55</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1db2qk5" name="Teste" />
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1moglkh">
+      <bpmn:outgoing>SequenceFlow_1m8cvnq</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_0zjgz55">
+      <bpmn:incoming>SequenceFlow_1m8cvnq</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:dataObjectReference id="DataObjectReference_0620szo" name="Rename" dataObjectRef="DataObject_1yrkszq" />
+    <bpmn:dataObject id="DataObject_1yrkszq" />
+    <bpmn:sequenceFlow id="SequenceFlow_1m8cvnq" sourceRef="StartEvent_1moglkh" targetRef="Task_0zjgz55" />
+    <bpmn:dataObjectReference id="DataObjectReference_0crmbhe" dataObjectRef="DataObject_1jnaqe8" />
+    <bpmn:dataObject id="DataObject_1jnaqe8" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0dq1883">
+      <bpmndi:BPMNShape id="Participant_085qxi2_di" bpmnElement="Participant_0qfw5w3" isHorizontal="true">
+        <dc:Bounds x="174" y="81" width="600" height="490" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1moglkh_di" bpmnElement="StartEvent_1moglkh">
+        <dc:Bounds x="353" y="183" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_0zjgz55_di" bpmnElement="Task_0zjgz55">
+        <dc:Bounds x="439" y="161" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1m8cvnq_di" bpmnElement="SequenceFlow_1m8cvnq">
+        <di:waypoint x="389" y="201" />
+        <di:waypoint x="439" y="201" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataObjectReference_0620szo_di" bpmnElement="DataObjectReference_0620szo">
+        <dc:Bounds x="683" y="147" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="680" y="204" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1xthsrw_di" bpmnElement="Lane_1xthsrw" isHorizontal="true">
+        <dc:Bounds x="204" y="81" width="570" height="370" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0crmbhe_di" bpmnElement="DataObjectReference_0crmbhe">
+        <dc:Bounds x="268" y="312" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1db2qk5_di" bpmnElement="Lane_1db2qk5" isHorizontal="true">
+        <dc:Bounds x="204" y="451" width="570" height="120" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
