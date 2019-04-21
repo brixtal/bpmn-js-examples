@@ -16,7 +16,7 @@ function delta2BPMNtpp(deltaSrc){
         const element = removedTags[index];
         if(isOrganizationalOrInformationalPerspective(element.innerHTML)){
             let json = structuredJson(element.innerHTML);
-            removed.push(json);
+            removed = mergeJson(removed, json);
         }        
     }
 
@@ -24,7 +24,7 @@ function delta2BPMNtpp(deltaSrc){
         const element2 = insertTags[index];
         if(isOrganizationalOrInformationalPerspective(element2.innerHTML)){
             let json = structuredJson(element2.innerHTML);
-            inserted.push(json);
+            inserted = mergeJson(inserted, json);
         }
     }
     
@@ -53,7 +53,9 @@ function delta2BPMNtpp(deltaSrc){
     inserted = inserted.filter(function (el) {
         return el != null;
     });
-
+    console.log(removed);
+    console.log(inserted);
+    console.log(changed);
     sessionStorage.removed = JSON.stringify(removed);
     sessionStorage.inserted = JSON.stringify(inserted);
     sessionStorage.changed = JSON.stringify(changed);
@@ -72,17 +74,39 @@ function isOrganizationalOrInformationalPerspective(innerHTML) {
 }
 
 function structuredJson(innerHTML){
-    let parsedXML = parser.parseFromString(innerHTML.trim(), "text/xml");
+    let tagsText = innerHTML.split('\n');
+    // for (let index = 0; index < tagsText.length; index++) {
+    //     console.log("========>", tagsText[index]);
+        
+    // }
+    let tagsJson = [];
+    for (let j = 0; j < tagsText.length; j++) {
             
-    let tagName = parsedXML.childNodes[0].tagName;
-    let id = parsedXML.childNodes[0].id;
-    let name = parsedXML.childNodes[0].getAttribute('name');
-    let json =  {
-                    "tagName": tagName, 
-                    "id": id, 
-                    "name": name, 
-                    "originalTag": innerHTML.trim()
-                };
+        let parsedXML = parser.parseFromString(tagsText[j].trim(), "text/xml");
+        let tags = parsedXML.childNodes;
+        
+        for (let index = 0; index < tags.length; index++) {
+            let tagName = tags[index].tagName;
+            let id = tags[index].id;
+            let name = tags[index].getAttribute('name');
+            let json =  {
+                            "tagName": tagName, 
+                            "id": id, 
+                            "name": name, 
+                            "originalTag": tagsText[j].trim()
+                        };
+            tagsJson.push(json);
+        }
+    }
+    
+    return tagsJson;
+}
 
-    return json;
+function mergeJson(a, b){
+
+    for (let index = 0; index < b.length; index++) {
+        a.push(b[index]);
+    }
+
+    return a;
 }
