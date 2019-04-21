@@ -101,82 +101,82 @@ function closeModel(){
   location.reload();
 }
 
-$(function() {
-        $.contextMenu({
-            selector: '.djs-element', 
-            callback: function(key, options) {
-                var m = key + " on " + $(this).attr("data-element-id");
-        var action, selectedElement;
-        //window.console && console.log(m); 
-        selectedElement = $(this).attr("data-element-id");
-        if(key == "insert-s"){
+// $(function() {
+//         $.contextMenu({
+//             selector: '.djs-element', 
+//             callback: function(key, options) {
+//                 var m = key + " on " + $(this).attr("data-element-id");
+//         var action, selectedElement;
+//         //window.console && console.log(m); 
+//         selectedElement = $(this).attr("data-element-id");
+//         if(key == "insert-s"){
           
 
-           if (isValidElement(selectedElement, key)){            
+//            if (isValidElement(selectedElement, key)){            
              
-             var bpmnString = operationInsertSerial (selectedElement, bpmnXml);
+//              var bpmnString = operationInsertSerial (selectedElement, bpmnXml);
 
-             sessionStorage.bpmn = encodeURIComponent(bpmnString);
+//              sessionStorage.bpmn = encodeURIComponent(bpmnString);
             
-             location.reload();
-           }
-           else {
-            alert('É inválido');
-           }
+//              location.reload();
+//            }
+//            else {
+//             alert('É inválido');
+//            }
 
-        }
+//         }
 
-        if(key == 'rename') {
+//         if(key == 'rename') {
           
-          var name = prompt("Please enter the new name:", ""); 
-          if(name == null) name = ''; 
+//           var name = prompt("Please enter the new name:", ""); 
+//           if(name == null) name = ''; 
 
-          sessionStorage.bpmn =  encodeURIComponent(operationRename(selectedElement, name, bpmnXml));
+//           sessionStorage.bpmn =  encodeURIComponent(operationRename(selectedElement, name, bpmnXml));
 
-          location.reload();
-        }
+//           location.reload();
+//         }
 
         
-        if(key == "merge"){
+//         if(key == "merge"){
                     
-          var selectedHtmlElement = $('#js-canvas')[0].getElementsByClassName('selected');          
+//           var selectedHtmlElement = $('#js-canvas')[0].getElementsByClassName('selected');          
 
-          var bpmnString = operationMerge(selectedHtmlElement, bpmnXml);
+//           var bpmnString = operationMerge(selectedHtmlElement, bpmnXml);
 
-          sessionStorage.bpmn = encodeURIComponent(bpmnString);
+//           sessionStorage.bpmn = encodeURIComponent(bpmnString);
 
-          location.reload();
+//           location.reload();
 
-        }
-        if(key == "delete") {
-          if (isValidElement(selectedElement, key)){ 
+//         }
+//         if(key == "delete") {
+//           if (isValidElement(selectedElement, key)){ 
             
 
-            var bpmnString = operationDelete(selectedElement, bpmnXml);
+//             var bpmnString = operationDelete(selectedElement, bpmnXml);
 
-            sessionStorage.bpmn = encodeURIComponent(bpmnString);
+//             sessionStorage.bpmn = encodeURIComponent(bpmnString);
 
-            location.reload();
-          }
-          else {
-            alert("You can't delete " + selectedElement);
-          }
-        }
-        },
-          items: {
-              "delete": {name: "Delete", disabled: true},
-              "replace": {name: "Replace", disabled: true},
-              "split": {name: "Split", disabled: true},
-              "merge": {name: "Merge", disabled: true},
-              "rename": {name: "Rename", disabled: true},
-              "insert": {name: "Insert" , disabled: true} 
-          }
-        });
+//             location.reload();
+//           }
+//           else {
+//             alert("You can't delete " + selectedElement);
+//           }
+//         }
+//         },
+//           items: {
+//               "delete": {name: "Delete", disabled: true},
+//               "replace": {name: "Replace", disabled: true},
+//               "split": {name: "Split", disabled: true},
+//               "merge": {name: "Merge", disabled: true},
+//               "rename": {name: "Rename", disabled: true},
+//               "insert": {name: "Insert" , disabled: true} 
+//           }
+//         });
 
-        $('.context-menu-one').on('click', function(e){
-            console.log('clicked', this);
-        })    
-    });
+//         $('.context-menu-one').on('click', function(e){
+//             console.log('clicked', this);
+//         })    
+//     });
 
     
 

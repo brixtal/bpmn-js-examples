@@ -95,7 +95,9 @@ function structuredJson(innerHTML){
                             "name": name, 
                             "originalTag": tagsText[j].trim()
                         };
-            tagsJson.push(json);
+            if(tagName.includes('bpmn')){
+                tagsJson.push(json);
+            }
         }
     }
     

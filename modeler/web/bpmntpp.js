@@ -114,3 +114,68 @@ function showOperationRenameData(jsonData) {
     changeColor(getGraphicElementByDataElementId(jsonData.id, 'path'), 'orange');
     changeColor(getGraphicElementByDataElementId(jsonData.id+"_label", 'text'), 'orange');
 }
+
+function refreshTable(){
+    let removed = JSON.parse(sessionStorage.removed);
+    let inserted = JSON.parse(sessionStorage.inserted);
+    let changed = JSON.parse(sessionStorage.changed);
+
+    var xmlDoc = parse.parseFromString('<a></a>', 'text/xml');
+	
+    var tagTemp = "";
+    var tag;
+
+
+    var table = document.getElementById('tabelaOperacoes');
+
+   
+    linhas = 1
+
+    var trTemp, op, par, attr;
+
+    for (let index = 0; index < removed.length; index++) {
+        if(!removed[index].id.includes("DataObjectReference")){
+            let trTemp = table.insertRow(linhas);
+            op = trTemp.insertCell(0);
+            op.innerHTML = "delete"
+            par = trTemp.insertCell(1);
+            par.innerHTML = "removedElement"
+            attr = trTemp.insertCell(2);
+            attr.innerHTML = removed[index].id;
+            linhas ++;
+        }
+    }
+    for (let index = 0; index < inserted.length; index++) {
+        if(!inserted[index].id.includes("DataObjectReference")){
+            let trTemp = table.insertRow(linhas);
+            op = trTemp.insertCell(0);
+            op.innerHTML = "insert"
+            par = trTemp.insertCell(1);
+            par.innerHTML = "insertedElement"
+            attr = trTemp.insertCell(2);
+            attr.innerHTML = inserted[index].id;
+            linhas ++;
+        }
+    }
+
+    for (let index = 0; index < changed.length; index++) {
+        if(!changed[index].id.includes("DataObjectReference")){
+            let trTemp = table.insertRow(linhas);
+            op = trTemp.insertCell(0);
+            op.innerHTML = "rename"
+            par = trTemp.insertCell(1);
+            par.innerHTML = "renamedElement"
+            attr = trTemp.insertCell(2);
+            attr.innerHTML = changed[index].id;
+            trTemp = table.insertRow(linhas+1);
+            op = trTemp.insertCell(0);
+            op.innerHTML = "rename"
+            par = trTemp.insertCell(1);
+            par.innerHTML = "newNameElement"
+            attr = trTemp.insertCell(2);
+            attr.innerHTML = changed[index].newName;
+            linhas +=2;
+        }
+    }
+
+}
