@@ -1,4 +1,4 @@
 <?php
-	header("Location: ./modeler/web/index.html");
+	header("Location: ./diff/index.html");
 	exit();
 ?>
