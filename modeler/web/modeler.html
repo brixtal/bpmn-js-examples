@@ -79,8 +79,6 @@ var parser = new DOMParser();
 var url = new URL(window.location.href);
 var typeProcess = url.searchParams.get("type");
 
-console.log(typeProcess);
-
 var process = sessionStorage.bpmn;
 
 if(typeProcess == 1){
@@ -109,7 +107,7 @@ $(function() {
             callback: function(key, options) {
                 var m = key + " on " + $(this).attr("data-element-id");
         var action, selectedElement;
-        window.console && console.log(m); 
+        //window.console && console.log(m); 
         selectedElement = $(this).attr("data-element-id");
         if(key == "insert-s"){
           

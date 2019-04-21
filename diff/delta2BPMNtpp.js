@@ -28,8 +28,6 @@ function delta2BPMNtpp(deltaSrc){
         }
     }
     
-    console.log(removed, inserted);
-
     for (let i = 0; i < removed.length; i++) {
         for (let j = 0; j < inserted.length; j++) {
             if(inserted[j] != null && removed[i] != null && removed[i].id == inserted[j].id){
@@ -56,7 +54,6 @@ function delta2BPMNtpp(deltaSrc){
         return el != null;
     });
 
-    console.log(removed, inserted, changed);
     sessionStorage.removed = JSON.stringify(removed);
     sessionStorage.inserted = JSON.stringify(inserted);
     sessionStorage.changed = JSON.stringify(changed);

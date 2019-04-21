@@ -1,21 +1,15 @@
 function getGraphicElementByDataElementId(id, type){
     gTags = document.getElementsByTagName("g");
-    console.log(gTags);
-    console.log(gTags.length);
     for (let index = 0; index < gTags.length; index++) {
-        console.log("entei");
         if(gTags[index].getAttribute('data-element-id') == id){
             innerTags = gTags[index].childNodes;
-            console.log(innerTags);
             for(let j = 0; j < innerTags.length; j++){
                 if(innerTags[j].nodeName == "g"){
                     
                     innerInnerTags = innerTags[j].childNodes;
-                    console.log(innerInnerTags);
 
                     for (let k = 0; k < innerInnerTags.length; k++) {
                         if(innerInnerTags[k].nodeName == type) {
-                            console.log(innerInnerTags[k]);
                             return innerInnerTags[k];
                         }
                     }
@@ -73,7 +67,6 @@ function showOperations(){
         }   
      }
 
-    console.log(removed, inserted, changed);
 }
 
 function showOperationDeleteLane(jsonLane) {
