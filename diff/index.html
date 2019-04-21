@@ -1,7 +1,7 @@
-<!doctype html>
 <html>
+
 <head>
-    <title>Delta.js interactive xml diff</title>
+    <title>BPMNt++ Compare</title>
     <link href="google-code-prettify/prettify.css" rel="stylesheet" type="text/css">
     <link href="srcdiff.css" rel="stylesheet" type="text/css">
     <script src="google-code-prettify/prettify.js"></script>
@@ -9,23 +9,34 @@
     <script src="srcdiff.js"></script>
     <script src="delta2BPMNtpp.js"></script>
 </head>
-<body>
-    <h1>Delta.js interactive xml diff</h1>
-    <form name='switchboard'>
-        <p><label>Original file</label><input type="file" id="file1"></p>
-        <p><label>Changed file</label><input type="file" id="file2"></p>
+
+<body style="font-family: Helvetica, Arial, sans-serif;">
+    <h1 style="text-align: center;">BPMNt++</h1>
+    <h3 style="text-align: center;">Ferramenta de mapeamento de alterações em processos de negócios</h3>
+    <form name="switchboard" style="text-align: center">
+        <div style="display: flex; flex-direction: row; justify-content: center; align-items: center width: 60%;">
+            <div style="padding: 10px; background: #EEE;  border-radius: 5px; display: flex;flex-direction: row;align-items: center;justify-content: center;width: 25%;display: inline-block;">    
+                <p style="text-align: center; font-weight: bold">Processo original</p>
+                <p style="text-align: center;"><input type="file" id="file1" style="text-align: center;"></p>
+            </div>
+            <div style="padding: 10px; background: #EEE;  margin-left:25px; border-radius: 5px; display: flex;flex-direction: row;align-items: center;justify-content: center;width: 25%;display: inline-block;">    
+                <p style="text-align: center; font-weight: bold">Processo adaptado</p>
+                <p style="text-align: center;"><input type="file" id="file2"></p>
+            </div>
+            
+     </div>
+     <br />
+     
+     <a href="#" style="text-decoration: none; color: black; margin-top: 200px;">Como funciona a ferramenta?</a> | <a href="#" style="text-decoration: none; color: black; margin-top: 200px;">Sobre o BPMNt++</a> | <a href="https://www.cos.ufrj.br/index.php/pt-BR/pessoas/details/18/2462" style="text-decoration: none; color: black; margin-top: 200px;">Sobre o autor</a>
     </form>
-    <div class='clearfix'>
-    <div id='src1'>
-        <pre class='prettyprint'></pre>
+    <div class="clearfix"><div id="src1">    <!-- <pre class='prettyprint'></pre> --></div><div id="src2">    <!-- <pre class='prettyprint'></pre> --></div>
     </div>
-    <div id='src2'>
-        <pre class='prettyprint'></pre>
+
+    <div id="patch"><!-- <pre class='prettyprint'></pre> -->
+        
     </div>
-    </div>
-    </div>
-    <div id='patch'>
-        <pre class='prettyprint'></pre>
-    </div>
+    
 </body>
+
 </html>
+
