@@ -1,4 +1,5 @@
 <html>
+
 <head>
   <title>BPMNt++ Modeler</title>
 
@@ -7,19 +8,20 @@
   <link rel="stylesheet" href="css/app.css" />
   <link rel="stylesheet" href="css/bpmnt.css" />
   <link rel="stylesheet" href="css/jquery.contextMenu.css" />
-  
-  
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- <script src="./jquery.contextMenu.js"></script>
- <script src="./bpmnt.js"></script>
- <script src="./bpmntpp.js"></script>
-    
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="./jquery.contextMenu.js"></script>
+  <script src="./bpmnt.js"></script>
+  <script src="./bpmntpp.js"></script>
+
 </head>
+
 <body>
   <!-- <a href='#' title="Close model" onclick="closeModel()"><img src='./img/if_Close_1891023.png' width="20" height="20" id='closeModel' class='closeModel'/></a> -->
   <div class="content" id="js-drop-zone">
 
-  <!--  <div class="message intro">
+    <!--  <div class="message intro">
       <div class="note">
 		Drop BPMN diagram from your desktop or <a id="js-create-diagram" href>create a new diagram</a> to get started.
       </div>
@@ -72,34 +74,34 @@
   border-radius: 5px;
 ">Processo Original</div>
 </body>
-  <script>
+<script>
 
-var parser = new DOMParser();
+  var parser = new DOMParser();
 
-var url = new URL(window.location.href);
-var typeProcess = url.searchParams.get("type");
+  var url = new URL(window.location.href);
+  var typeProcess = url.searchParams.get("type");
 
-var process = sessionStorage.bpmn;
+  var process = sessionStorage.bpmn;
 
-if(typeProcess == 1){
-  document.getElementById('cabecalho').innerHTML = "Processo Adaptado";
-  process = sessionStorage.bpmn2;
-  
-}
+  if (typeProcess == 1) {
+    document.getElementById('cabecalho').innerHTML = "Processo Adaptado";
+    process = sessionStorage.bpmn2;
 
-var bpmnXml = parser.parseFromString(decodeURIComponent(process), 'text/xml');
+  }
 
-function createSequenceFlow() {
-  var sequenceFlowElement = 'SequenceFlow_' + Math.random().toString().replace('0.','');
-  return sequenceFlowElement;
-}
+  var bpmnXml = parser.parseFromString(decodeURIComponent(process), 'text/xml');
 
-function closeModel(){
-  sessionStorage.removeItem('bpmn');
-  sessionStorage.removeItem('bpmnt');
-  sessionStorage.removeItem('tailoring');
-  location.reload();
-}
+  function createSequenceFlow() {
+    var sequenceFlowElement = 'SequenceFlow_' + Math.random().toString().replace('0.', '');
+    return sequenceFlowElement;
+  }
+
+  function closeModel() {
+    sessionStorage.removeItem('bpmn');
+    sessionStorage.removeItem('bpmnt');
+    sessionStorage.removeItem('tailoring');
+    location.reload();
+  }
 
 // $(function() {
 //         $.contextMenu({
@@ -110,14 +112,14 @@ function closeModel(){
 //         //window.console && console.log(m); 
 //         selectedElement = $(this).attr("data-element-id");
 //         if(key == "insert-s"){
-          
+
 
 //            if (isValidElement(selectedElement, key)){            
-             
+
 //              var bpmnString = operationInsertSerial (selectedElement, bpmnXml);
 
 //              sessionStorage.bpmn = encodeURIComponent(bpmnString);
-            
+
 //              location.reload();
 //            }
 //            else {
@@ -127,7 +129,7 @@ function closeModel(){
 //         }
 
 //         if(key == 'rename') {
-          
+
 //           var name = prompt("Please enter the new name:", ""); 
 //           if(name == null) name = ''; 
 
@@ -136,9 +138,9 @@ function closeModel(){
 //           location.reload();
 //         }
 
-        
+
 //         if(key == "merge"){
-                    
+
 //           var selectedHtmlElement = $('#js-canvas')[0].getElementsByClassName('selected');          
 
 //           var bpmnString = operationMerge(selectedHtmlElement, bpmnXml);
@@ -150,7 +152,7 @@ function closeModel(){
 //         }
 //         if(key == "delete") {
 //           if (isValidElement(selectedElement, key)){ 
-            
+
 
 //             var bpmnString = operationDelete(selectedElement, bpmnXml);
 
@@ -178,16 +180,56 @@ function closeModel(){
 //         })    
 //     });
 
-    
+
 
 </script>
 
-  <script src="index.js" onload="$('#loading').hide();"></script>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js" type="text/javascript"></script>
+<script src="index.js" onload="$('#loading').hide();"></script>
 
-    <script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.ui.position.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js" type="text/javascript"></script>
 
-    <script src="https://swisnl.github.io/jQuery-contextMenu/js/main.js" type="text/javascript"></script>
+<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.ui.position.min.js" type="text/javascript"></script>
+
+<script src="https://swisnl.github.io/jQuery-contextMenu/js/main.js" type="text/javascript"></script>
+<script>
+
+  var selectedElement;
+  var oldColor = "white";
+  let tagType = "rect";
+  $("body").click(function (event) {
+    getClick(event);
+  });
+
+
+
+  function getClick(event){
+    if(event != null){
+      elementCliked = event.toElement.parentNode.getAttribute('data-element-id');
+      sessionStorage.lastEvent = elementCliked;
+    } else {
+      elementCliked = sessionStorage.lastEvent;
+    }
+
+    if (selectedElement != null && selectedElement.includes('DataObject')) {
+      tagType = "path";
+    }
+    changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, tagType), "white", jsonOperationsColors[selectedElement]);
+
+    if (elementCliked != null && (elementCliked.includes('DataObject') || elementCliked.includes('Lane') || elementCliked.includes('Participant')) && jsonOperationsColors[elementCliked] != null) {
+      tagType = "rect";
+      if (elementCliked.includes('DataObject')) {
+        tagType = "path";
+      }
+      selectedElement = elementCliked;
+      changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, tagType), jsonOperationsColors[selectedElement], "white");
+    }
+  }
+
+  window.setInterval(function(){
+  getClick();
+}, 500);
+
+</script>
+
 </html>

@@ -29,6 +29,15 @@ function changeColor(element, color) {
     }
 }
 
+function changeBackgroundColor(element, color, old) {
+    if(element != null){
+        if(!(typeProcess == 0 && color == 'orange')){
+            element.setAttribute('style', element.getAttribute('style').replace(old, color));
+        }
+    }
+}
+
+var jsonOperationsColors = {};
 function showOperations(){
     let removed = JSON.parse(sessionStorage.removed);
     let inserted = JSON.parse(sessionStorage.inserted);
@@ -42,9 +51,9 @@ function showOperations(){
                 showOperationDeleteLane(removed[index]);
             } else if(removed[index].tagName == 'bpmn:participant') {
                 showOperationDeletePool(removed[index]);
-            }   
+            } 
          }
-        
+         jsonOperationsColors[removed[index].id] = "#FF0000"
     }
 
     for (let index = 0; index < inserted.length; index++) {
@@ -55,6 +64,7 @@ function showOperations(){
         } else if(inserted[index].tagName == 'bpmn:participant') {
             showOperationInsertPool(inserted[index]);
         }   
+        jsonOperationsColors[inserted[index].id] = "#00FF00"
      }
 
      for (let index = 0; index < changed.length; index++) {
@@ -64,7 +74,9 @@ function showOperations(){
             showOperationRenameLane(changed[index]);
         } else if(changed[index].tagName == 'bpmn:participant') {
             showOperationRenamePool(changed[index]);
-        }   
+        } 
+
+        jsonOperationsColors[changed[index].id] = "#FF7400"
      }
 
 }
@@ -169,8 +181,7 @@ function refreshTable(){
             attr = trTemp.insertCell(2);
             attr.innerHTML = changed[index].id;
             trTemp = table.insertRow(linhas+1);
-            op.setAttribute('rowspan', "2");
-            
+            op.setAttribute('rowspan', "2");            
             par = trTemp.insertCell(0);
             par.innerHTML = "newNameElement"
             attr = trTemp.insertCell(1);
@@ -181,3 +192,23 @@ function refreshTable(){
     }
 
 }
+
+var selectedElement = "";
+var oldColor = "white";
+let type = "rect";
+document.onload = $( "body" ).click(function( event ) { 
+    elementCliked = event.toElement.parentNode.getAttribute('data-element-id');
+    if(selectedElement != elementCliked && selectedElement != ""){
+        if(elementCliked.includes('DataObject')){
+            type = "path";
+        }
+        changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, type), "white", jsonOperationsColors[selectedElement]);
+    }
+    type = "rect";
+    if(elementCliked.includes('DataObject')){
+        type = "path";
+    }
+    selectedElement = elementCliked;
+    changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, type), jsonOperationsColors[selectedElement], "white");
+    console.log("hey");
+  });
