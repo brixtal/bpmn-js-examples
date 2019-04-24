@@ -1,0 +1,263 @@
+<html>
+
+<head>
+  <title>BPMNt++ Modeler</title>
+
+  <link rel="stylesheet" href="css/diagram-js.css" />
+  <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/bpmnt.css" />
+  <link rel="stylesheet" href="css/jquery.contextMenu.css" />
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="./jquery.contextMenu.js"></script>
+  <script src="./bpmnt.js"></script>
+  <script src="./bpmntpp.js"></script>
+
+</head>
+
+<body style="background-color: gray">
+  <!-- <a href='#' title="Close model" onclick="closeModel()"><img src='./img/if_Close_1891023.png' width="20" height="20" id='closeModel' class='closeModel'/></a> -->
+  <div class="content" id="js-drop-zone">
+
+    <!--  <div class="message intro">
+      <div class="note">
+		Drop BPMN diagram from your desktop or <a id="js-create-diagram" href>create a new diagram</a> to get started.
+      </div>
+    </div> -->
+
+    <center id='loading' class='centered'>Loading...</center>
+
+    <div class="message error">
+      <div class="note">
+        <p>Ooops, we could not display the BPMN 2.0 diagram.</p>
+
+        <div class="details">
+          <span>cause of the problem</span>
+          <pre></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="canvas" id="js-canvas"></div>
+  </div>
+  <!-- <input type="button" value="Convert to BPMN File" id='download_bpmn' class='button -regular ' onclick='download()'>
+  <input type="button" value="Download BPMNt File" id='download_bpmnt' class='button -regular ' onclick='downloadBPMNt()'>
+  <input type="button" value="Compare process versions" id='compare' class='button -regular ' onclick='compare()'> -->
+  <ul class="buttons">
+    <li>
+      download
+    </li>
+    <li>
+      <a id="js-download-diagram" href title="download BPMN diagram">
+        BPMN diagram
+      </a>
+    </li>
+    <li>
+      <a id="js-download-svg" href title="download as SVG image">
+        SVG image
+      </a>
+    </li>
+  </ul>
+  <div id="cabecalho" style="
+  position: absolute;
+  top: 0;
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  margin: 20px;
+  padding: 10px;
+  background: #EEE;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 5px;
+">Processo Original</div>
+</body>
+<script>
+
+  var parser = new DOMParser();
+
+  var url = new URL(window.location.href);
+  var typeProcess = url.searchParams.get("type");
+
+  var process = sessionStorage.bpmn;
+
+  if (typeProcess == 1) {
+    document.getElementById('cabecalho').innerHTML = "Processo Adaptado";
+    process = sessionStorage.bpmn2;
+
+  }
+
+  var bpmnXml = parser.parseFromString(decodeURIComponent(process), 'text/xml');
+
+  function createSequenceFlow() {
+    var sequenceFlowElement = 'SequenceFlow_' + Math.random().toString().replace('0.', '');
+    return sequenceFlowElement;
+  }
+
+  function closeModel() {
+    sessionStorage.removeItem('bpmn');
+    sessionStorage.removeItem('bpmnt');
+    sessionStorage.removeItem('tailoring');
+    location.reload();
+  }
+
+// $(function() {
+//         $.contextMenu({
+//             selector: '.djs-element', 
+//             callback: function(key, options) {
+//                 var m = key + " on " + $(this).attr("data-element-id");
+//         var action, selectedElement;
+//         //window.console && console.log(m); 
+//         selectedElement = $(this).attr("data-element-id");
+//         if(key == "insert-s"){
+
+
+//            if (isValidElement(selectedElement, key)){            
+
+//              var bpmnString = operationInsertSerial (selectedElement, bpmnXml);
+
+//              sessionStorage.bpmn = encodeURIComponent(bpmnString);
+
+//              location.reload();
+//            }
+//            else {
+//             alert('É inválido');
+//            }
+
+//         }
+
+//         if(key == 'rename') {
+
+//           var name = prompt("Please enter the new name:", ""); 
+//           if(name == null) name = ''; 
+
+//           sessionStorage.bpmn =  encodeURIComponent(operationRename(selectedElement, name, bpmnXml));
+
+//           location.reload();
+//         }
+
+
+//         if(key == "merge"){
+
+//           var selectedHtmlElement = $('#js-canvas')[0].getElementsByClassName('selected');          
+
+//           var bpmnString = operationMerge(selectedHtmlElement, bpmnXml);
+
+//           sessionStorage.bpmn = encodeURIComponent(bpmnString);
+
+//           location.reload();
+
+//         }
+//         if(key == "delete") {
+//           if (isValidElement(selectedElement, key)){ 
+
+
+//             var bpmnString = operationDelete(selectedElement, bpmnXml);
+
+//             sessionStorage.bpmn = encodeURIComponent(bpmnString);
+
+//             location.reload();
+//           }
+//           else {
+//             alert("You can't delete " + selectedElement);
+//           }
+//         }
+//         },
+//           items: {
+//               "delete": {name: "Delete", disabled: true},
+//               "replace": {name: "Replace", disabled: true},
+//               "split": {name: "Split", disabled: true},
+//               "merge": {name: "Merge", disabled: true},
+//               "rename": {name: "Rename", disabled: true},
+//               "insert": {name: "Insert" , disabled: true} 
+//           }
+//         });
+
+//         $('.context-menu-one').on('click', function(e){
+//             console.log('clicked', this);
+//         })    
+//     });
+
+
+
+</script>
+
+<script src="index.js" onload="$('#loading').hide();"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js" type="text/javascript"></script>
+
+<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.ui.position.min.js" type="text/javascript"></script>
+
+<script src="https://swisnl.github.io/jQuery-contextMenu/js/main.js" type="text/javascript"></script>
+<script>
+
+  var selectedElement;
+  var oldColor = "white";
+  let tagType = "rect";
+  $("body").click(function (event) {
+    getClick(event);
+  });
+
+
+
+  function getClick(event){
+    if(event != null){
+      elementCliked = event.toElement.parentNode.getAttribute('data-element-id');
+      sessionStorage.lastEvent = elementCliked;
+    } else {
+      elementCliked = sessionStorage.lastEvent;
+    }
+    
+    if(selectedElement == "DataObjectReference_1eet4lf" || selectedElement == "DataObjectReference_102z47r" || selectedElement == "DataObjectReference_0x9uzwo") {
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0x9uzwo", "path"), "white", "#FFFF00");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_102z47r", "path"),  "white", "#FFFF00");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_1eet4lf", "path"),  "white", "#FFFF00");
+    }
+
+     if(selectedElement == "DataObjectReference_1sriiy4" || selectedElement == "DataObjectReference_0vzxiyd" || selectedElement == "DataObjectReference_0iq1izx") {
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_1sriiy4", "path"), "white", "#0000FF");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0vzxiyd", "path"),  "white", "#0000FF");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0iq1izx", "path"),  "white", "#0000FF");
+    }
+
+
+    if (selectedElement != null && selectedElement.includes('DataObject')) {
+      tagType = "path";
+    }
+    changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, tagType), "white", jsonOperationsColors[selectedElement]);
+
+    if (elementCliked != null && (elementCliked.includes('DataObject') || elementCliked.includes('Lane') || elementCliked.includes('Participant')) && jsonOperationsColors[elementCliked] != null) {
+      tagType = "rect";
+      if (elementCliked.includes('DataObject')) {
+        tagType = "path";
+      }
+      selectedElement = elementCliked;
+      changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, tagType), jsonOperationsColors[selectedElement], "white");
+    }
+    if(elementCliked == "DataObjectReference_1eet4lf" || elementCliked == "DataObjectReference_0x9uzwo" || elementCliked == "DataObjectReference_102z47r") {
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_1eet4lf", "path"), "#FFFF00", "white");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0x9uzwo", "path"),  "#FFFF00", "white");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_102z47r", "path"),  "#FFFF00", "white");
+    }
+
+    if(elementCliked == "DataObjectReference_0iq1izx" || elementCliked == "DataObjectReference_0vzxiyd" || elementCliked == "DataObjectReference_1sriiy4") {
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0iq1izx", "path"), "#0000FF", "white");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0vzxiyd", "path"),  "#0000FF", "white");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_1sriiy4", "path"),  "#0000FF", "white");
+    }
+    
+    
+  }
+
+
+
+  window.setInterval(function(){
+  getClick();
+}, 500);
+
+</script>
+
+</html>
