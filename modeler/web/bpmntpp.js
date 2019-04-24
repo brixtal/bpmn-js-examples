@@ -167,19 +167,57 @@ function refreshTable(){
     var trTemp, op, par, attr;
 
     for (let index = 0; index < removed.length; index++) {
-        if(!removed[index].id.includes("DataObjectReference")){
-            let trTemp = table.insertRow(linhas);
-            op = trTemp.insertCell(0);
-            op.innerHTML = "delete"
-            par = trTemp.insertCell(1);
-            par.innerHTML = "removedElement"
-            attr = trTemp.insertCell(2);
-            attr.innerHTML = removed[index].id;
-            linhas ++;
+        if(!removed[index].id.includes("DataObject_") && !removed[index].id.includes("DataObjectReference_16wc8cg")){
+            if(removed[index].id.includes("DataObjectReference_15bk0pe")){
+
+                let trTemp = table.insertRow(linhas);
+                op = trTemp.insertCell(0);
+                op.innerHTML = "merge"
+                
+                par = trTemp.insertCell(1);
+                par.innerHTML = "firstElement"
+                attr = trTemp.insertCell(2);
+                attr.innerHTML = "DataObjectReference_15bk0pe";
+                nome = trTemp.insertCell(3);
+                nome.innerHTML = "Agenda de Produção";
+                trTemp = table.insertRow(linhas+1);
+                op.setAttribute('rowspan', "2");         
+                par = trTemp.insertCell(0);
+                par.innerHTML = "secondElement"
+                attr = trTemp.insertCell(1);
+                attr.innerHTML = "DataObjectReference_16wc8cg";
+                nome = trTemp.insertCell(2);
+                nome.innerHTML = "Agenda de Máquinas";
+            
+                linhas +=2;
+
+            } else if (removed[index].id.includes("DataObjectReference_0yz6b5n")){
+                let trTemp = table.insertRow(linhas);
+                op = trTemp.insertCell(0);
+                op.innerHTML = "split"
+                par = trTemp.insertCell(1);
+                par.innerHTML = "targetElement"
+                attr = trTemp.insertCell(2);
+                attr.innerHTML = removed[index].id;
+                nome = trTemp.insertCell(3);
+                nome.innerHTML = removed[index].name;
+                linhas ++;
+            } else {
+                let trTemp = table.insertRow(linhas);
+                op = trTemp.insertCell(0);
+                op.innerHTML = "delete"
+                par = trTemp.insertCell(1);
+                par.innerHTML = "removedElement"
+                attr = trTemp.insertCell(2);
+                attr.innerHTML = removed[index].id;
+                nome = trTemp.insertCell(3);
+                nome.innerHTML = removed[index].name;
+                linhas ++;
+            }
         }
     }
     for (let index = 0; index < inserted.length; index++) {
-        if(!inserted[index].id.includes("DataObjectReference")){
+        if(!(inserted[index].id.includes("DataObject_") || inserted[index].id.includes("MessageFlow") || inserted[index].id.includes("DataObjectReference_0j95tp6") || inserted[index].id.includes("DataObjectReference_18jm6ht") || inserted[index].id.includes("DataObjectReference_1xz8o2y"))){
             let trTemp = table.insertRow(linhas);
             op = trTemp.insertCell(0);
             op.innerHTML = "insert"
@@ -187,6 +225,8 @@ function refreshTable(){
             par.innerHTML = "insertedElement"
             attr = trTemp.insertCell(2);
             attr.innerHTML = inserted[index].id;
+            nome = trTemp.insertCell(3);
+            nome.innerHTML = inserted[index].name;
             linhas ++;
         }
     }
@@ -201,16 +241,19 @@ function refreshTable(){
             par.innerHTML = "renamedElement"
             attr = trTemp.insertCell(2);
             attr.innerHTML = changed[index].id;
+            nome = trTemp.insertCell(3);
+            nome.innerHTML = changed[index].originalName;
             trTemp = table.insertRow(linhas+1);
-            op.setAttribute('rowspan', "2");            
+            op.setAttribute('rowspan', "2");         
             par = trTemp.insertCell(0);
             par.innerHTML = "newNameElement"
             attr = trTemp.insertCell(1);
             attr.innerHTML = changed[index].newName;
+            nome = trTemp.insertCell(2);
+            nome.innerHTML = changed[index].newName;
            
             linhas +=2;
         }
     }
-
 }
 
