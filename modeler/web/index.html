@@ -133,7 +133,6 @@
   var oldColor = "white";
   let tagType = "rect";
   $("body").click(function (event) {
-    elementCliked = event.toElement.parentNode.getAttribute('data-element-id');
 
     if (elementCliked != null && elementCliked.includes('DataObject')) {
       tagType = "path";
@@ -149,7 +148,6 @@
       selectedElement = elementCliked;
       changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, tagType), jsonOperationsColors[selectedElement], "white");
     }
-    console.log(selectedElement, jsonOperationsColors[selectedElement]);
   });
 
 </script>
