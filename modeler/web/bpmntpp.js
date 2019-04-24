@@ -193,22 +193,3 @@ function refreshTable(){
 
 }
 
-var selectedElement = "";
-var oldColor = "white";
-let type = "rect";
-document.onload = $( "body" ).click(function( event ) { 
-    elementCliked = event.toElement.parentNode.getAttribute('data-element-id');
-    if(selectedElement != elementCliked && selectedElement != ""){
-        if(elementCliked.includes('DataObject')){
-            type = "path";
-        }
-        changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, type), "white", jsonOperationsColors[selectedElement]);
-    }
-    type = "rect";
-    if(elementCliked.includes('DataObject')){
-        type = "path";
-    }
-    selectedElement = elementCliked;
-    changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, type), jsonOperationsColors[selectedElement], "white");
-    console.log("hey");
-  });
