@@ -210,6 +210,19 @@
     } else {
       elementCliked = sessionStorage.lastEvent;
     }
+    
+    if(selectedElement == "DataObjectReference_1xz8o2y" || selectedElement == "DataObjectReference_15bk0pe" || selectedElement == "DataObjectReference_16wc8cg") {
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_1xz8o2y", "path"), "white", "#FFFF00");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_15bk0pe", "path"),  "white", "#FFFF00");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_16wc8cg", "path"),  "white", "#FFFF00");
+    }
+
+     if(selectedElement == "DataObjectReference_0j95tp6" || selectedElement == "DataObjectReference_18jm6ht" || selectedElement == "DataObjectReference_0yz6b5n") {
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_18jm6ht", "path"), "white", "#0000FF");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0j95tp6", "path"),  "white", "#0000FF");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0yz6b5n", "path"),  "white", "#0000FF");
+    }
+
 
     if (selectedElement != null && selectedElement.includes('DataObject')) {
       tagType = "path";
@@ -224,7 +237,22 @@
       selectedElement = elementCliked;
       changeBackgroundColor(getGraphicElementByDataElementId(selectedElement, tagType), jsonOperationsColors[selectedElement], "white");
     }
+    if(elementCliked == "DataObjectReference_1xz8o2y" || elementCliked == "DataObjectReference_15bk0pe" || elementCliked == "DataObjectReference_16wc8cg") {
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_1xz8o2y", "path"), "#FFFF00", "white");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_15bk0pe", "path"),  "#FFFF00", "white");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_16wc8cg", "path"),  "#FFFF00", "white");
+    }
+
+    if(elementCliked == "DataObjectReference_18jm6ht" || elementCliked == "DataObjectReference_0j95tp6" || elementCliked == "DataObjectReference_0yz6b5n") {
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_18jm6ht", "path"), "#0000FF", "white");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0yz6b5n", "path"),  "#0000FF", "white");
+      changeBackgroundColor(getGraphicElementByDataElementId("DataObjectReference_0j95tp6", "path"),  "#0000FF", "white");
+    }
+    
+    
   }
+
+
 
   window.setInterval(function(){
   getClick();
