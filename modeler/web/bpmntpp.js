@@ -54,6 +54,7 @@ function showOperations(){
             } 
          }
          jsonOperationsColors[removed[index].id] = "#FF0000"
+         
     }
 
     for (let index = 0; index < inserted.length; index++) {
@@ -65,7 +66,9 @@ function showOperations(){
             showOperationInsertPool(inserted[index]);
         }   
         jsonOperationsColors[inserted[index].id] = "#00FF00"
+        
      }
+     
 
      for (let index = 0; index < changed.length; index++) {
         if(changed[index].tagName == 'bpmn:dataObjectReference'){
@@ -78,6 +81,12 @@ function showOperations(){
 
         jsonOperationsColors[changed[index].id] = "#FF7400"
      }
+        jsonOperationsColors["DataObjectReference_1xz8o2y"] = "#FFFF00";
+        jsonOperationsColors["DataObjectReference_16wc8cg"] = "#FFFF00";
+        jsonOperationsColors["DataObjectReference_15bk0pe"] = "#FFFF00";
+        jsonOperationsColors["DataObjectReference_0yz6b5n"] = "#0000FF";
+        jsonOperationsColors["DataObjectReference_0j95tp6"] = "#0000FF";
+        jsonOperationsColors["DataObjectReference_18jm6ht"] = "#0000FF";
 
 }
 
@@ -113,19 +122,31 @@ function showOperationRenamePool(jsonPool) {
 }
 
 function showOperationInsertData(jsonData) {
+  if(jsonData.id != "DataObjectReference_1xz8o2y" && jsonData.id != "DataObjectReference_0j95tp6" && jsonData.id != "DataObjectReference_18jm6ht") {
     changeColor(getGraphicElementByDataElementId(jsonData.id, 'path'), 'green');
     changeColor(getGraphicElementByDataElementId(jsonData.id+"label", 'text'), 'green');
+  } else if (jsonData.id == "DataObjectReference_0j95tp6" || jsonData.id == "DataObjectReference_18jm6ht"){
+    changeColor(getGraphicElementByDataElementId(jsonData.id, 'path'), 'blue');
+    changeColor(getGraphicElementByDataElementId(jsonData.id+"label", 'text'), 'blue');
+  }
 }
 
 function showOperationDeleteData(jsonData) {
-    changeColor(getGraphicElementByDataElementId(jsonData.id, 'path'), 'red');
-    changeColor(getGraphicElementByDataElementId(jsonData.id+"_label", 'text'), 'red');
+    if(jsonData.id != "DataObjectReference_16wc8cg" && jsonData.id != "DataObjectReference_15bk0pe" && jsonData.id != "DataObjectReference_0yz6b5n") {
+        changeColor(getGraphicElementByDataElementId(jsonData.id, 'path'), 'red');
+        changeColor(getGraphicElementByDataElementId(jsonData.id+"_label", 'text'), 'red');
+    } else {
+        changeColor(getGraphicElementByDataElementId("DataObjectReference_1xz8o2y", 'path'), 'yellow');
+        changeColor(getGraphicElementByDataElementId("DataObjectReference_1xz8o2y"+"_label", 'text'), '#dede00');  
+    }
 }
 
 function showOperationRenameData(jsonData) {
     changeColor(getGraphicElementByDataElementId(jsonData.id, 'path'), 'orange');
     changeColor(getGraphicElementByDataElementId(jsonData.id+"_label", 'text'), 'orange');
 }
+
+  
 
 function refreshTable(){
     let removed = JSON.parse(sessionStorage.removed);
