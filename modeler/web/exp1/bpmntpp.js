@@ -24,7 +24,7 @@ function getGraphicElementByDataElementId(id, type){
 function changeColor(element, color) {
     if(element != null){
         if(!(typeProcess == 0 && color == 'orange')){
-            element.setAttribute('style', element.getAttribute('style').replace("black", color));
+           // element.setAttribute('style', element.getAttribute('style').replace("black", color));
         }
     }
 }
@@ -32,7 +32,7 @@ function changeColor(element, color) {
 function changeBackgroundColor(element, color, old) {
     if(element != null){
         if(!(typeProcess == 0 && color == 'orange')){
-            element.setAttribute('style', element.getAttribute('style').replace(old, color));
+            //element.setAttribute('style', element.getAttribute('style').replace(old, color));
         }
     }
 }
